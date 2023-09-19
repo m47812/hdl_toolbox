@@ -1,0 +1,2 @@
+
+class HDL_Module:
