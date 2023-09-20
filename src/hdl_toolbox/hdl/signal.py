@@ -1,15 +1,15 @@
 from enum import IntEnum
 
+from .signal_types import SignalType
 
 class SignalDirection:
     In = 0
     Out = 1
     InOut = 2
-
 class Signal:
     def __init__(self, name, signal_type, direction : SignalDirection = None):
         self.name = name
-        self.signal_type = signal_type
+        self.signal_type : SignalType = signal_type
         self.direction : SignalDirection = direction
 
     @property
@@ -27,14 +27,20 @@ class Signal:
 
 class VHDLSignal(Signal):
     def __init__(self, name, signal_type, direction : SignalDirection = None):
-        super.__init__(name, signal_type, direction)
+        super().__init__(name, signal_type, direction)
 
     @property
     def entity_string(self):
         if self.direction is None:
             return self.name + " : " + self.signal_type.string
         else:
-            return self.name + " : " + str(self.direction) + " " + self.signal_type.string
+            if self.direction == SignalDirection.In:
+                direction_str = "in"
+            elif self.direction == SignalDirection.Out:
+                direction_str = "out"
+            elif self.direction == SignalDirection.InOut:
+                direction_str = "inout"
+            return self.name + " : " + direction_str + " " + self.signal_type.string
 
     def instance_string(self):
         return self.name + " => #X"
@@ -48,7 +54,7 @@ class VHDLSignal(Signal):
 
 class VerilogSignal(Signal):
     def __init__(self, name, signal_type, direction : SignalDirection = None):
-        super.__init__(name, signal_type, direction)
+        super().__init__(name, signal_type, direction)
 
     @property
     def entity_string(self):
