@@ -36,44 +36,46 @@ class VHDLSignal(Signal):
         """
     def __init__(self, signal_str):
         signal_name = re.findall(r'\w+(?=\s*:)', signal_str, re.IGNORECASE)[0]
+        super().__init__(
+            signal_name,
+            self._extract_signal_type(signal_str),
+            self._extract_signal_direction(signal_str),
+            self._extract_default_value(signal_str)
+        )
+
+    def _extract_signal_direction(self, signal_str) -> SignalDirection:
         signal_direction = re.findall(r'(?<=:)\s*\w+', signal_str, re.IGNORECASE)[0].strip().lower()
         if signal_direction == "in":
-            signal_direction = SignalDirection.In
+            return SignalDirection.In
         elif signal_direction == "out":
-            signal_direction = SignalDirection.Out
+            return SignalDirection.Out
         elif signal_direction == "inout":
-            signal_direction = SignalDirection.InOut
+            return SignalDirection.InOut
         else:
-            raise ValueError("Unknown signal direction was:" + signal_direction)
-        signal_type = re.findall(r'(?:in|out|inout)\s*(\w+)', signal_str, re.IGNORECASE)[0].strip()
+           return None
+
+    def _extract_signal_type(self, signal_str) -> VHDLSignalType:
+        signal_type = re.findall(r':\s*(?:in|out|inout)?\s*(\w+)', signal_str, re.IGNORECASE)[0].strip()
         range_type_range = re.findall(r'(?<=range)\s+.+?to.*', signal_str, re.IGNORECASE)
         vector_type_range = re.findall(r'\(.+\)', signal_str, re.IGNORECASE)
         if len(range_type_range) == 0 and len(vector_type_range) > 0:
-            vector_type_range = vector_type_range[0].strip().lower()
             #Vector Type
-            if "downto" in vector_type_range:
-                upper = re.findall(r'(?<=\().+?(?=downto)', vector_type_range, re.IGNORECASE)[0].strip()
-                lower = re.findall(r'(?<=downto).+(?=\))', vector_type_range, re.IGNORECASE)[0].strip()
-                range_object = VHDLSignalRange(lower, upper, "downto")
-                signal_type_object = VHDLVectorSignalType(signal_type, range_object)
-            elif "to" in vector_type_range:
-                lower = re.findall(r'.+?(?:to)', vector_type_range, re.IGNORECASE)[0].strip()
-                upper = re.findall(r'(?<=to).+', vector_type_range, re.IGNORECASE)[0].strip()
-                range_object = VHDLSignalRange(lower, upper, "to")
-                signal_type_object = VHDLVectorSignalType(signal_type, range_object)
-            else:
-                raise ValueError("Invalid Range Expression:" + vector_type_range)
+            vector_type_range = vector_type_range[0].strip().lower()
+            return VHDLVectorSignalType(signal_type, VHDLSignalRange(vector_type_range))
         elif len(range_type_range) > 0 and len(vector_type_range) == 0:
             #Range Type
             range_type_range = range_type_range[0].strip().lower()
-            lower = re.findall(r'.+?(?=to)', range_type_range, re.IGNORECASE)[0].strip()
-            upper = re.findall(r'(?<=to).+', range_type_range, re.IGNORECASE)[0].strip()
-            range_object = VHDLSignalRange(lower, upper, "to")
-            signal_type_object = VHDLRangeSignalType(signal_type, range_object)
+            return VHDLRangeSignalType(signal_type, VHDLSignalRange(range_type_range))
         else:
             #Single Bit Type
-            signal_type_object = VHDLSignalType(signal_type)
-        super().__init__(signal_name, signal_type_object, signal_direction)
+            return VHDLSignalType(signal_type)
+
+    def _extract_default_value(self, signal_str):
+        default_value = re.findall(r':=\s*(.+)', signal_str, re.IGNORECASE)
+        if len(default_value) != 0:
+            return default_value[0]
+        else:
+            return None
 
     @property
     def entity_string(self):

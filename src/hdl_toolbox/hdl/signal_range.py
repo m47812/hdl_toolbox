@@ -1,3 +1,5 @@
+import re
+
 class SignalRange:
     def __init__(self, lower, upper):
         self.lower = lower
@@ -11,6 +13,20 @@ class VHDLSignalRange(SignalRange):
         super().__init__(lower, upper)
         self.to_type = to_type
 
+    def __init__(self, signal_str):
+        if "downto" in signal_str:
+            upper = re.findall(r'(?<=\().+?(?=downto)', signal_str, re.IGNORECASE)[0].strip()
+            lower = re.findall(r'(?<=downto).+(?=\))', signal_str, re.IGNORECASE)[0].strip()
+            range_type = "downto"
+        elif "to" in signal_str:
+            lower = re.findall(r'.+?(?=to)', signal_str, re.IGNORECASE)[0].strip()
+            upper = re.findall(r'(?<=to).+', signal_str, re.IGNORECASE)[0].strip()
+            range_type = "to"
+        else:
+            raise ValueError("Invalid range expression")
+        super().__init__(lower, upper)
+        self.to_type = range_type
+        
     def __str__(self):
         if self.to_type == "downto":
             return self.upper + " downto " + self.lower

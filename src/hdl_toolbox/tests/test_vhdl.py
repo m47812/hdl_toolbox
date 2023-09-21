@@ -67,8 +67,6 @@ def test_vhdl_signal_extraction(source, result):
 ]
 )
 def test_vhdl_signal_parsing_and_string_gen(source, ref_result):
-    hdl_module = VHDL_Module()
-    #computed = hdl_module._separate_signal_into_subcomponents(source)
     computed = VHDLSignal(source)
     converted_back_string = computed.entity_string
     assert converted_back_string == ref_result, "Strings did not match \n Should:\n" + ref_result + "\n was:\n" + converted_back_string
