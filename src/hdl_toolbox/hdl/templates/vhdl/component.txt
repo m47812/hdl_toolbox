@@ -1,4 +1,3 @@
 component #ENTITY_NAME is
-#GENERIC
-#PORT
+#GENERIC#PORT
 end component #ENTITY_NAME;

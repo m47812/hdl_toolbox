@@ -95,3 +95,25 @@ def test_entity_generation_test(source, result):
     HDLModule = VHDL_Module(source)
     computed = HDLModule.entity_string
     assert computed == result
+
+
+@pytest.mark.parametrize("source, result", [
+    (VHDL_TEMPLATE_STRING,
+     """inst_output_position : component output_position
+    generic map(
+        g_std_vec_size => 
+    )
+    port map(
+        clk => ,
+        rst => ,
+        coord_x => ,
+        coord_y => ,
+        coord_valid => ,
+        threshold => 
+    );
+""")
+])
+def test_instance_generation_test(source, result):
+    HDLModule = VHDL_Module(source)
+    computed = HDLModule.instance_string()
+    assert computed == result

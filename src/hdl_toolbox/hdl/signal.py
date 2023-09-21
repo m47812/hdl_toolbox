@@ -93,11 +93,11 @@ class VHDLSignal(Signal):
             ret_string = ret_string + " := " + self.default_value
         return ret_string
 
-    def instance_string(self):
-        return self.name + " => #X"
-
-    def instance_string(self, connected_signal:Signal):
-        return self.name + " => " + connected_signal.name
+    def instance_string(self, connected_signal:Signal = None):
+        if connected_signal is None:
+            return self.name + " => "
+        else:
+            return self.name + " => " + connected_signal.name
 
     @property
     def declaration_string(self):

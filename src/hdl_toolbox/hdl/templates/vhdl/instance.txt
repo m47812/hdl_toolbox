@@ -1,3 +1,2 @@
 #INSTANCE_NAME : component #ENTITY_NAME
-    #GNERICS
-    #PORT
+#GENERIC#PORT
