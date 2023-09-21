@@ -10,3 +10,13 @@ class HDL_Module:
 
     def _separate_signal_into_subcomponents(self, signal_str):
         raise NotImplementedError("_separate_signal_into_subcomponents can not be executed in the base class")
+    
+    @property
+    def entity_string(self):
+        raise NotImplementedError("Can not be executed in the base class")
+    @property
+    def component_string(self):
+        raise NotImplementedError("Can not be executed in the base class")
+    
+    def instance_string(self, instance_name=None):
+        raise NotImplementedError("Can not be executed in the base class")
