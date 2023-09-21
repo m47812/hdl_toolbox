@@ -63,7 +63,8 @@ def test_vhdl_signal_extraction(source, result):
 @pytest.mark.parametrize("source, ref_result",[
     ("clk             : in  std_logic", "clk : in std_logic"),
     ("coord_x    : in  std_ulogic_vector((g_std_vec_size - 1) downto 0)", "coord_x : in std_ulogic_vector((g_std_vec_size - 1) downto 0)"),
-    ("coord_y    : in  integer range 0 to g_std_vec_size - 1", "coord_y : in integer range 0 to g_std_vec_size - 1")
+    ("coord_y    : in  integer range 0 to g_std_vec_size - 1", "coord_y : in integer range 0 to g_std_vec_size - 1"),
+    ("g_std_vec_size  : natural := 11", "g_std_vec_size : natural := 11")
 ]
 )
 def test_vhdl_signal_parsing_and_string_gen(source, ref_result):

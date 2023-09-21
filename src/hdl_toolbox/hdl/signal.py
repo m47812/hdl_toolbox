@@ -80,7 +80,7 @@ class VHDLSignal(Signal):
     @property
     def entity_string(self):
         if self.direction is None:
-            return self.name + " : " + self.signal_type.string
+            ret_string = self.name + " : " + self.signal_type.string
         else:
             if self.direction == SignalDirection.In:
                 direction_str = "in"
@@ -88,7 +88,10 @@ class VHDLSignal(Signal):
                 direction_str = "out"
             elif self.direction == SignalDirection.InOut:
                 direction_str = "inout"
-            return self.name + " : " + direction_str + " " + self.signal_type.string
+            ret_string = self.name + " : " + direction_str + " " + self.signal_type.string
+        if self.default_value is not None:
+            ret_string = ret_string + " := " + self.default_value
+        return ret_string
 
     def instance_string(self):
         return self.name + " => #X"
