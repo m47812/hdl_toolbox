@@ -22,7 +22,7 @@ entity output_position is
         coord_y         : in  integer range 0 to g_std_vec_size - 1;
         coord_valid     : in  std_ulogic;
         --Threshold
-        threshold       : out std_ulogic_vector(7 downto 0);
+        threshold       : out std_ulogic_vector(7 downto 0)
     );
 end entity output_position;
 
@@ -39,7 +39,9 @@ begin
             s_coord_x <= (others => '0');
             s_coord_y <= (others => '0');
             s_coord_valid <= '0';
-        elsif rising_edge(clk) then""",
+        end if;
+     end process;
+end RTL;""",
      [
         "clk             : in  std_logic",
         "rst             : in  std_logic",
@@ -52,7 +54,7 @@ begin
 
 def test_vhdl_signal_extraction(source, result):
     hdl_module = VHDL_Module()
-    computed = hdl_module._extract_signal_strings(source)
+    computed, _ = hdl_module._extract_signals_and_generics_strings(source)
     assert len(result) == len(computed), f"Did not detect the correct amount of signals. Should: {len(result)} Was: {len(computed)}"
     for i, res in enumerate(result):
         assert computed[i] == res, f"Wrong signal content was \n{computed[i]}\n instead of:\n{res}"
