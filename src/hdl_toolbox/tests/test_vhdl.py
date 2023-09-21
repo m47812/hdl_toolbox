@@ -4,8 +4,8 @@ from ..hdl import VHDL_Module
 from ..hdl.signal import VHDLSignal, SignalDirection, Signal
 from ..hdl.signal_types import VHDLRangeSignalType, VHDLVectorSignalType, VHDLSignalType
 
-@pytest.mark.parametrize("source, result", [
-    ("""library ieee;
+VHDL_TEMPLATE_STRING = \
+"""library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
@@ -41,7 +41,10 @@ begin
             s_coord_valid <= '0';
         end if;
      end process;
-end RTL;""",
+end RTL;"""
+
+@pytest.mark.parametrize("source, result", [
+    (VHDL_TEMPLATE_STRING,
      [
         "clk             : in  std_logic",
         "rst             : in  std_logic",
@@ -51,7 +54,6 @@ end RTL;""",
         "threshold       : out std_ulogic_vector(7 downto 0)"
     ])
 ])
-
 def test_vhdl_signal_extraction(source, result):
     hdl_module = VHDL_Module()
     computed, _ = hdl_module._extract_signals_and_generics_strings(source)
@@ -71,3 +73,25 @@ def test_vhdl_signal_parsing_and_string_gen(source, ref_result):
     computed = VHDLSignal(source)
     converted_back_string = computed.entity_string
     assert converted_back_string == ref_result, "Strings did not match \n Should:\n" + ref_result + "\n was:\n" + converted_back_string
+
+
+@pytest.mark.parametrize("source, result", [
+    (VHDL_TEMPLATE_STRING,
+     """entity output_position is
+    generic(
+        g_std_vec_size : natural := 11
+    );
+    port(
+        clk : in std_logic;
+        rst : in std_logic;
+        coord_x : in std_ulogic_vector((g_std_vec_size - 1) downto 0);
+        coord_y : in integer range 0 to g_std_vec_size - 1;
+        coord_valid : in std_ulogic;
+        threshold : out std_ulogic_vector(7 downto 0)
+    );
+end entity output_position;""")
+])
+def test_entity_generation_test(source, result):
+    HDLModule = VHDL_Module(source)
+    computed = HDLModule.entity_string
+    assert computed == result

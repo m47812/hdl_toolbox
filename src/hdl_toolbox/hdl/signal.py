@@ -52,7 +52,7 @@ class VHDLSignal(Signal):
         elif signal_direction == "inout":
             return SignalDirection.InOut
         else:
-           return None
+            return None
 
     def _extract_signal_type(self, signal_str) -> VHDLSignalType:
         signal_type = re.findall(r':\s*(?:in|out|inout)?\s*(\w+)', signal_str, re.IGNORECASE)[0].strip()
