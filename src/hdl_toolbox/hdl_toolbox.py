@@ -15,7 +15,7 @@ def component(files):
         print_title(f"Printing Component Declarations ({i+1}/{len(files)})")
         print_filename(file)
         hdl_module = from_file(file)
-        print(hdl_module.instance_string())
+        print(hdl_module.component_string)
 
 @main.command()
 @click.argument('files', nargs=-1, type=click.Path())
@@ -24,7 +24,7 @@ def entity(files):
         print_title(f"Printing Entity Declarations ({i+1}/{len(files)})")
         print_filename(file)
         hdl_module = from_file(file)
-        print(hdl_module.instance_string())
+        print(hdl_module.entity_string)
 
 @main.command()
 @click.argument('files', nargs=-1, type=click.Path())
