@@ -1,0 +1,3 @@
+component #ENTITY_NAME is
+#GENERIC#PORT
+end component #ENTITY_NAME;

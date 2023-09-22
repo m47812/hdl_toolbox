@@ -1,0 +1,3 @@
+entity #ENTITY_NAME is
+#GENERIC#PORT
+end entity #ENTITY_NAME;
