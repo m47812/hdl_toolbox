@@ -8,7 +8,7 @@ class SignalButton(QPushButton):
         self.signal = signal
 
 class EntityPanel(QWidget):
-    def __init__(self, button_clicked_callback, title, input_singal_list, output_signal_list, parent=None):
+    def __init__(self, button_clicked_callback, title, input_singal_list, output_signal_list, is_toplevel=False, parent=None):
         super().__init__(parent)
         self.setLayout(QVBoxLayout())
         group_box = QGroupBox()
@@ -27,7 +27,10 @@ class EntityPanel(QWidget):
             layout.addWidget(btn, i+1, 1)
             self.buttons.append(btn)
         self.layout().addWidget(group_box)
-        group_box.setStyleSheet("QGroupBox { border: 1px solid black; }")
+        if is_toplevel:
+            group_box.setStyleSheet("QGroupBox { border: 1px solid black; background-color: gray; }")
+        else:
+            group_box.setStyleSheet("QGroupBox { border: 1px solid black;}")
 
 
 class TopLevelModulePanel(QScrollArea):
@@ -40,8 +43,8 @@ class TopLevelModulePanel(QScrollArea):
         self.setWidget(self.scrollContent)
         self.add_connection_callback = add_connection_callback
 
-    def addEntityPanel(self, title, button_list1, button_list2):
-        panel = EntityPanel(self.on_button_clicked, title, button_list1, button_list2)
+    def addEntityPanel(self, title, button_list1, button_list2, is_top_level_entity=False):
+        panel = EntityPanel(self.on_button_clicked, title, button_list1, button_list2, is_toplevel=is_top_level_entity)
         self.layout.addWidget(panel)
 
     @pyqtSlot()

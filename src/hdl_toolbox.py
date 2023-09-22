@@ -38,9 +38,14 @@ def instance(files):
 
 @main.command()
 @click.argument('files', nargs=-1, type=click.Path())
-def toplevel(files):
+@click.option('-t','--topentity', default=None, type=click.Path())
+def toplevel(files, topentity):
     hdl_modules = [from_file(file) for file in files]
-    creator = TopLevelCreator(hdl_modules)
+    if topentity is not None:
+        toplevel_entity = from_file(topentity)
+    else:
+        toplevel_entity = None
+    creator = TopLevelCreator(hdl_modules, toplevel_entity=toplevel_entity)
     creator.execute()
     print_title("Printing Top Level")
     print("\n" + creator.generate_architecture() + "\n")
