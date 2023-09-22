@@ -19,8 +19,12 @@ class VHDL_Module(HDL_Module):
         generic_str = re.findall(r'generic[\n|\s]*?\(.+?(?=(?:port[\n|\s]*?\(|end))', entity_str,re.IGNORECASE | re.DOTALL | re.MULTILINE)
         if len(generic_str) != 0:
             generics = self._extract_signal_strings(generic_str[0])
+        else:
+            generics = []
         if len(port_str) != 0:
             signals = self._extract_signal_strings(port_str[0])
+        else:
+            signals = []
         return signals, generics
 
     def _extract_signal_strings(self, source):
@@ -36,7 +40,10 @@ class VHDL_Module(HDL_Module):
     
     @property
     def entity_string(self):
-        genrics_str = self._signals_entity_format(self.generics)
+        if len(self.generics) > 0:
+            genrics_str = self._signals_entity_format(self.generics)
+        else:
+            genrics_str = None
         signals_str = self._signals_entity_format(self.signals)
         template = VHDLEntityTemplate(
             self.entity_name,
@@ -47,7 +54,10 @@ class VHDL_Module(HDL_Module):
     
     @property
     def component_string(self):
-        genrics_str = self._signals_entity_format(self.generics)
+        if len(self.generics) > 0:
+            genrics_str = self._signals_entity_format(self.generics)
+        else:
+            genrics_str = None
         signals_str = self._signals_entity_format(self.signals)
         template = VHDLComponentTemplate(
             self.entity_name,
@@ -57,7 +67,11 @@ class VHDL_Module(HDL_Module):
         return str(template)
     
     def instance_string(self, instance_name=None):
-        genrics_str = self._signals_instance_format(self.generics)
+        if len(self.generics) > 0:
+            genrics_str = self._signals_instance_format(self.generics)
+        else:
+            genrics_str = None
+        signals_str
         signals_str = self._signals_instance_format(self.signals)
         if instance_name is None:
             instance_name = "inst_" + self.entity_name
