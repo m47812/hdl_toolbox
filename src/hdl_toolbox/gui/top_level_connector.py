@@ -57,9 +57,9 @@ class TopLevelModulePanel(QScrollArea):
             btn.setStyleSheet("QPushButton { background-color: red; }")
             self.add_connection_callback(self.clicked_buttons[0].signal, self.clicked_buttons[1].signal)
         elif click_count == 3:
-            btn.setStyleSheet("QPushButton { background-color: green; }")
             self.clicked_buttons[0].setStyleSheet("QPushButton { background-color: blue; }")
             self.clicked_buttons[1].setStyleSheet("QPushButton { background-color: blue; }")
+            btn.setStyleSheet("QPushButton { background-color: green; }")
             self.clicked_buttons = [btn]
 
 class TopLevelModuleApplication:
@@ -68,4 +68,4 @@ class TopLevelModuleApplication:
 
     def top_level_connector_execute(self, main_panel : TopLevelModulePanel):
         main_panel.show()
-        sys.exit(self.app.exec())
+        self.app.exec()

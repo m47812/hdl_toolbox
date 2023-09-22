@@ -1,0 +1,9 @@
+architecture rtl of #ENTITY_NAME is
+-- Component Declarations
+#COMPONENTS
+-- Signal Declarations
+#SIGNAL_DECLARATIONS
+begin
+
+#INSTANCES
+end architecture rtl;

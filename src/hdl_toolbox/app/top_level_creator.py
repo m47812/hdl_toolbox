@@ -2,6 +2,7 @@ from typing import List
 
 from ..hdl import HDL_Module
 from ..hdl.signal import SignalDirection, Signal
+from ..hdl.templates import VHDLArchitectureTemplate
 from ..gui import EntityPanel, TopLevelModulePanel, TopLevelModuleApplication
 
 class TopLevelCreator:
@@ -23,4 +24,24 @@ class TopLevelCreator:
     def add_connection_callback(self, source, destination):
         self.connections.append((source, destination))
         print("Source: " + source.name + " Destination: " + destination.name)
-        
+    
+    def generate_architecture(self): 
+        signals = ""
+        signals_declared = []
+        for source, dest in self.connections:
+            source.connected_signal = source
+            dest.connected_signal = source
+            if source not in signals_declared:
+                signals = signals + source.declaration_string + "\n"
+                signals_declared.append(source)
+        components = ""
+        instances = ""
+        for module in self.hdl_modules:
+            components = components + module.component_string + "\n\n"
+            instances = instances + module.instance_string() + "\n\n"
+        template = VHDLArchitectureTemplate(
+            instances = instances, 
+            components = components,
+            signals = signals 
+        )
+        return str(template)

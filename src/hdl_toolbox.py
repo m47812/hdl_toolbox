@@ -42,6 +42,8 @@ def toplevel(files):
     hdl_modules = [from_file(file) for file in files]
     creator = TopLevelCreator(hdl_modules)
     creator.execute()
+    print_title("Printing Top Level")
+    print("\n" + creator.generate_architecture() + "\n")
         
 
 if __name__ == '__main__':

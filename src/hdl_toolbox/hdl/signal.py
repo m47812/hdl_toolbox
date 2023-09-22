@@ -14,11 +14,16 @@ class Signal:
         self.signal_type : SignalType = signal_type
         self.direction : SignalDirection = direction
         self.default_value = default_value
+        self.connected_signal = None
 
     @property
     def entity_string(self):
         raise NotImplemented("EntityString is not defined for the base class")
-
+    
+    @property
+    def declaration_string(self):
+        raise NotImplemented("declaration_string is not defined for the base class")
+    
     def instance_string(self):
         raise NotImplemented("InstanceString is not defined for the base class")
     def instance_string(self, connected_signal):
@@ -92,16 +97,16 @@ class VHDLSignal(Signal):
         if self.default_value is not None:
             ret_string = ret_string + " := " + self.default_value
         return ret_string
-
-    def instance_string(self, connected_signal:Signal = None):
-        if connected_signal is None:
-            return self.name + " => "
-        else:
-            return self.name + " => " + connected_signal.name
-
+    
     @property
     def declaration_string(self):
-        return "signal " + self.name + " : " + self.signal_type.string
+        return "signal " + self.name + " : " + self.signal_type.string + ";"
+    
+    def instance_string(self):
+        if self.connected_signal is None:
+            return self.name + " => "
+        else:
+            return self.name + " => " + self.connected_signal.name
 
 class VerilogSignal(Signal):
     def __init__(self, name, signal_type, direction : SignalDirection = None):
