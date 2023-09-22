@@ -18,13 +18,11 @@ class EntityPanel(QWidget):
         self.buttons = []
         for i, signal in enumerate(input_singal_list):
             btn = SignalButton(signal)
-            btn.setStyleSheet("QPushButton { background-color: white; }")
             btn.clicked.connect(button_clicked_callback)
             layout.addWidget(btn, i+1, 0)
             self.buttons.append(btn)
         for i, signal in enumerate(output_signal_list):
             btn = SignalButton(signal)
-            btn.setStyleSheet("QPushButton { background-color: white; }")
             btn.clicked.connect(button_clicked_callback)
             layout.addWidget(btn, i+1, 1)
             self.buttons.append(btn)
