@@ -2,8 +2,13 @@ from PyQt6.QtWidgets import QWidget, QGridLayout, QPushButton, QApplication, QLa
 from PyQt6.QtCore import pyqtSlot
 import sys
 
+class SignalButton(QPushButton):
+    def __init__(self, signal):
+        super().__init__(signal.name)
+        self.signal = signal
+
 class EntityPanel(QWidget):
-    def __init__(self, button_clicked_callback, title, btn_strings1, btn_strings2, parent=None):
+    def __init__(self, button_clicked_callback, title, input_singal_list, output_signal_list, parent=None):
         super().__init__(parent)
         self.setLayout(QVBoxLayout())
         group_box = QGroupBox()
@@ -11,14 +16,14 @@ class EntityPanel(QWidget):
         title_label = QLabel(title)
         layout.addWidget(title_label, 0, 0, 1, 2)
         self.buttons = []
-        for i, button_text in enumerate(btn_strings1):
-            btn = QPushButton(button_text)
+        for i, signal in enumerate(input_singal_list):
+            btn = SignalButton(signal)
             btn.setStyleSheet("QPushButton { background-color: white; }")
             btn.clicked.connect(button_clicked_callback)
             layout.addWidget(btn, i+1, 0)
             self.buttons.append(btn)
-        for i, button_text in enumerate(btn_strings2):
-            btn = QPushButton(button_text)
+        for i, signal in enumerate(output_signal_list):
+            btn = SignalButton(signal)
             btn.setStyleSheet("QPushButton { background-color: white; }")
             btn.clicked.connect(button_clicked_callback)
             layout.addWidget(btn, i+1, 1)
@@ -28,13 +33,14 @@ class EntityPanel(QWidget):
 
 
 class TopLevelModulePanel(QScrollArea):
-    def __init__(self, parent=None):
+    def __init__(self, add_connection_callback, parent=None):
         super(TopLevelModulePanel, self).__init__(parent)
         self.clicked_buttons = []
         self.scrollContent = QWidget(self)
         self.layout = QHBoxLayout(self.scrollContent)
         self.setWidgetResizable(True)
         self.setWidget(self.scrollContent)
+        self.add_connection_callback = add_connection_callback
 
     def addEntityPanel(self, title, button_list1, button_list2):
         panel = EntityPanel(self.on_button_clicked, title, button_list1, button_list2)
@@ -49,18 +55,12 @@ class TopLevelModulePanel(QScrollArea):
             btn.setStyleSheet("QPushButton { background-color: green; }")
         elif click_count == 2:
             btn.setStyleSheet("QPushButton { background-color: red; }")
-            self.show_buttons()
-            self.clicked_buttons = []
-        else:
-            for panel in self.findChildren(EntityPanel):
-                for btn in panel.findChildren(QPushButton):
-                    btn.setStyleSheet("QPushButton { background-color: white; }")
-            self.clicked_buttons = [btn]
+            self.add_connection_callback(self.clicked_buttons[0].signal, self.clicked_buttons[1].signal)
+        elif click_count == 3:
             btn.setStyleSheet("QPushButton { background-color: green; }")
-
-    def show_buttons(self):
-        names = [btn.text() for btn in self.clicked_buttons]
-        QMessageBox.information(self, "Info", f"You clicked: {names}")
+            self.clicked_buttons[0].setStyleSheet("QPushButton { background-color: blue; }")
+            self.clicked_buttons[1].setStyleSheet("QPushButton { background-color: blue; }")
+            self.clicked_buttons = [btn]
 
 class TopLevelModuleApplication:
     def __init__(self) -> None:
