@@ -15,8 +15,8 @@ class VHDL_Module(HDL_Module):
     def _extract_signals_and_generics_strings(self, source):
         source_no_comments = self._remove_comments(source)
         entity_str = re.findall(r'entity.*?end(?:\s+entity)?\s+\w+\s*;', source_no_comments, re.IGNORECASE | re.DOTALL | re.MULTILINE)[0]
-        port_str = re.findall(r'port.*?(?:end|generic)', entity_str, re.IGNORECASE| re.DOTALL | re.MULTILINE)
-        generic_str = re.findall(r'generic.+?(?:port|end)', entity_str,re.IGNORECASE | re.DOTALL | re.MULTILINE)
+        port_str = re.findall(r'port[\n|\s]*?\(.*?(?:end|generic)', entity_str, re.IGNORECASE| re.DOTALL | re.MULTILINE)
+        generic_str = re.findall(r'generic[\n|\s]*?\(.+?(?=(?:port[\n|\s]*?\(|end))', entity_str,re.IGNORECASE | re.DOTALL | re.MULTILINE)
         if len(generic_str) != 0:
             generics = self._extract_signal_strings(generic_str[0])
         if len(port_str) != 0:
@@ -30,7 +30,8 @@ class VHDL_Module(HDL_Module):
         comments = re.findall(r'--.*', source)
         source_no_comments = source
         for comment in comments:
-            source_no_comments = source_no_comments.replace(comment, "")
+            source_no_comments = source_no_comments.replace(comment, "-- ")
+        source_no_comments = source_no_comments.replace("-- ", "")
         return source_no_comments
     
     @property
