@@ -1,8 +1,9 @@
 import click
 from colorama import Fore
 
-from hdl import HDL_Module
-from util import from_file, print_title, print_filename
+from hdl_toolbox.hdl import HDL_Module
+from hdl_toolbox.util import from_file, print_title, print_filename
+from hdl_toolbox.app import TopLevelCreator
 
 @click.group()
 def main():
@@ -34,6 +35,14 @@ def instance(files):
         print_filename(file)
         hdl_module = from_file(file)
         print(hdl_module.instance_string())
+
+@main.command()
+@click.argument('files', nargs=-1, type=click.Path())
+def toplevel(files):
+    hdl_modules = [from_file(file) for file in files]
+    creator = TopLevelCreator(hdl_modules)
+    creator.execute()
+        
 
 if __name__ == '__main__':
     main()

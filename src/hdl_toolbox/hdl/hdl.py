@@ -1,6 +1,12 @@
+from typing import List
+
+from .signal import Signal
+
 class HDL_Module:
     def __init__(self):
-        self.signals = []
+        self.signals : List[Signal] = []
+        self.generics : List[Signal] = []
+        self.entity_name = ""
 
     def from_source_code(self, source):
         raise NotImplementedError("from_source_code can not be executed in the base class")

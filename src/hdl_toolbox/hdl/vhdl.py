@@ -71,7 +71,6 @@ class VHDL_Module(HDL_Module):
             genrics_str = self._signals_instance_format(self.generics)
         else:
             genrics_str = None
-        signals_str
         signals_str = self._signals_instance_format(self.signals)
         if instance_name is None:
             instance_name = "inst_" + self.entity_name
