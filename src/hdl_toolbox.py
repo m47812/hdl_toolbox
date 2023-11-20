@@ -3,7 +3,7 @@ from colorama import Fore
 
 from hdl_toolbox.hdl import HDL_Module
 from hdl_toolbox.util import from_file, print_title, print_filename
-from hdl_toolbox.app import TopLevelCreator
+from hdl_toolbox.app import TopLevelCreator, VHDLDontTouchTopLevelCreator
 
 @click.group()
 def main():
@@ -49,7 +49,15 @@ def toplevel(files, topentity):
     creator.execute()
     print_title("Printing Top Level")
     print("\n" + creator.generate_architecture() + "\n")
-        
+
+@main.command()
+@click.argument('files', nargs=-1, type=click.Path())
+def dtt(files):
+    """Prints a Dont_Touch top level file for the given entity to perform standalone synthesis (not connecting the entity) on Xilinx Devices"""
+    hdl_modules = [from_file(file) for file in files]
+    creator = VHDLDontTouchTopLevelCreator(hdl_modules)
+    print_title("Printing Dont Touch Synthesis Top Level")
+    print("\n" + str(creator) + "\n")
 
 if __name__ == '__main__':
     main()

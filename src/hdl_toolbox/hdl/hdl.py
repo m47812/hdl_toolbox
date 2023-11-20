@@ -23,6 +23,8 @@ class HDL_Module:
     @property
     def component_string(self):
         raise NotImplementedError("Can not be executed in the base class")
-    
+
+    def signal_declaration_string(self, en_constants=True, en_signals=True):
+        raise NotImplementedError("Can not be executed in the base class")
     def instance_string(self, instance_name=None):
         raise NotImplementedError("Can not be executed in the base class")
