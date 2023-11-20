@@ -1,7 +1,7 @@
 import re
 from colorama import Fore
 
-from hdl import HDL_Module, VHDL_Module
+from .hdl import HDL_Module, VHDL_Module
 
 def _read_file(file_path):
     try:

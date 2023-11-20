@@ -51,3 +51,28 @@ class VHDLInstanceTemplate(_VHDLComponentEntityTemplate):
     def __str__(self):
         string = super(VHDLInstanceTemplate, self).__str__() 
         return string.replace("#INSTANCE_NAME", self.instance_name)
+    
+class VHDLArchitectureTemplate(TemplateManager):
+    def __init__(self, entity_name="top_level", instances=None, components=None, signals=None) -> None:
+        self._template = self.read_template_file_relative_path("./vhdl/architecture.txt")
+        self.instances = instances
+        self.components = components
+        self.signals = signals
+        self.entity_name = entity_name
+
+    def __str__(self) -> str:
+        template = self._template
+        template = template.replace("#ENTITY_NAME", self.entity_name)
+        template = template.replace(
+            "#COMPONENTS",
+            self.indent(self.components, 1)
+        )
+        template = template.replace(
+            "#INSTANCES",
+            self.indent(self.instances, 1)
+        )
+        template = template.replace(
+            "#SIGNAL_DECLARATIONS",
+            self.indent(self.signals, 1)
+        )
+        return template

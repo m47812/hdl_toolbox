@@ -1,1 +1,1 @@
-from .vhdl_templates import VHDLEntityTemplate, VHDLComponentTemplate, VHDLInstanceTemplate
+from .vhdl_templates import VHDLEntityTemplate, VHDLComponentTemplate, VHDLInstanceTemplate, VHDLArchitectureTemplate

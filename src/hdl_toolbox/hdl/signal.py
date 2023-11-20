@@ -14,19 +14,22 @@ class Signal:
         self.signal_type : SignalType = signal_type
         self.direction : SignalDirection = direction
         self.default_value = default_value
+        self.connected_signal = None
 
     @property
     def entity_string(self):
         raise NotImplemented("EntityString is not defined for the base class")
-
-    def instance_string(self):
-        raise NotImplemented("InstanceString is not defined for the base class")
-    def instance_string(self, connected_signal):
-        raise NotImplemented("InstanceString is not defined for the base class")
-
+    
     @property
     def declaration_string(self):
         raise NotImplemented("declaration_string is not defined for the base class")
+    
+    def instance_string(self):
+        raise NotImplemented("InstanceString is not defined for the base class")
+
+    @property
+    def constant_declaration_string(self):
+        raise NotImplemented("constant_declaration_string is not defined for the base class")
 
 class VHDLSignal(Signal):
     def __init__(self, name, signal_type, direction : SignalDirection = None):
@@ -92,16 +95,23 @@ class VHDLSignal(Signal):
         if self.default_value is not None:
             ret_string = ret_string + " := " + self.default_value
         return ret_string
-
-    def instance_string(self, connected_signal:Signal = None):
-        if connected_signal is None:
-            return self.name + " => "
-        else:
-            return self.name + " => " + connected_signal.name
-
+    
     @property
     def declaration_string(self):
-        return "signal " + self.name + " : " + self.signal_type.string
+        return "signal " + self.name + " : " + self.signal_type.string + ";"
+    
+    def instance_string(self):
+        if self.connected_signal is None:
+            return self.name + " => "
+        else:
+            return self.name + " => " + self.connected_signal.name
+
+    @property
+    def constant_declaration_string(self):
+        default_val = self.default_value
+        if self.default_value is None:
+            default_val = "INSERT_DEFAULT_VALUE_HERE"
+        return "constant " + self.name + " : " + self.signal_type.string + " := " + default_val + ";"
 
 class VerilogSignal(Signal):
     def __init__(self, name, signal_type, direction : SignalDirection = None):
@@ -120,9 +130,6 @@ class VerilogSignal(Signal):
 
     def instance_string(self):
         return "." + self.name + "(#X)"
-
-    def instance_string(self, connected_signal:Signal):
-        return "." + self.name + "(" + connected_signal.name + ")"
 
     @property
     def declaration_string(self):

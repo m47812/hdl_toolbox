@@ -1,6 +1,12 @@
+from typing import List
+
+from .signal import Signal
+
 class HDL_Module:
     def __init__(self):
-        self.signals = []
+        self.signals : List[Signal] = []
+        self.generics : List[Signal] = []
+        self.entity_name = ""
 
     def from_source_code(self, source):
         raise NotImplementedError("from_source_code can not be executed in the base class")
@@ -17,6 +23,8 @@ class HDL_Module:
     @property
     def component_string(self):
         raise NotImplementedError("Can not be executed in the base class")
-    
+
+    def signal_declaration_string(self, en_constants=True, en_signals=True):
+        raise NotImplementedError("Can not be executed in the base class")
     def instance_string(self, instance_name=None):
         raise NotImplementedError("Can not be executed in the base class")
