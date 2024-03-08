@@ -117,3 +117,27 @@ def test_instance_generation_test(source, result):
     HDLModule = VHDL_Module(source)
     computed = HDLModule.instance_string()
     assert computed == result
+
+@pytest.mark.parametrize("source, result", [
+    (VHDL_TEMPLATE_STRING,
+     """class output_position:
+    def __init__(self, dut):
+        self.clk
+        self.rst
+        self.coord_x
+        self.coord_y
+        self.coord_valid
+        self.threshold
+
+    def initalize_zeros(self):
+        self.clk.value = 0
+        self.rst.value = 0
+        self.coord_x.value = 0
+        self.coord_y.value = 0
+        self.coord_valid.value = 0
+""")
+])
+def test_cocotb_interface_generation(source, result):
+    HDLModule = VHDL_Module(source)
+    computed = HDLModule.cocotb_interface_string
+    assert computed == result

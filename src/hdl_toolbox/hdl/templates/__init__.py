@@ -1,1 +1,2 @@
 from .vhdl_templates import VHDLEntityTemplate, VHDLComponentTemplate, VHDLInstanceTemplate, VHDLArchitectureTemplate
+from .python_templates import COCOTBInterfaceTemplate
