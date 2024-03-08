@@ -38,6 +38,15 @@ def instance(files):
 
 @main.command()
 @click.argument('files', nargs=-1, type=click.Path())
+def cocotb(files):
+    for i, file in enumerate(files):
+        print_title(f"Printing CocoTB Interface ({i+1}/{len(files)})")
+        print_filename(file)
+        hdl_module = from_file(file)
+        print(hdl_module.cocotb_interface_string)
+
+@main.command()
+@click.argument('files', nargs=-1, type=click.Path())
 @click.option('-t','--topentity', default=None, type=click.Path())
 def toplevel(files, topentity):
     hdl_modules = [from_file(file) for file in files]
