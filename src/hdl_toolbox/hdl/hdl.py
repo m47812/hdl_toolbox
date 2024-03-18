@@ -28,7 +28,7 @@ class HDL_Module:
     @property
     def cocotb_interface_string(self):
         signal_string = "".join([
-            "self." + signal.name + "\n"
+            "self." + signal.name + " = dut." + signal.name +"\n"
             for signal in self.signals
         ])
         inputs_string = "".join([

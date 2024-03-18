@@ -120,14 +120,14 @@ def test_instance_generation_test(source, result):
 
 @pytest.mark.parametrize("source, result", [
     (VHDL_TEMPLATE_STRING,
-     """class output_position:
+     """class OUTPUT_POSITION_INTERFACE:
     def __init__(self, dut):
-        self.clk
-        self.rst
-        self.coord_x
-        self.coord_y
-        self.coord_valid
-        self.threshold
+        self.clk = dut.clk
+        self.rst = dut.rst
+        self.coord_x = dut.coord_x
+        self.coord_y = dut.coord_y
+        self.coord_valid = dut.coord_valid
+        self.threshold = dut.threshold
 
     def initalize_zeros(self):
         self.clk.value = 0

@@ -9,7 +9,7 @@ class COCOTBInterfaceTemplate(TemplateManager):
 
     def __str__(self):
         template = self._template
-        template = template.replace("#ENTITY_NAME", self.entity_name)
+        template = template.replace("#ENTITY_NAME", self.entity_name.upper() + "_INTERFACE")
         template = template.replace(
             "#SIGNALS",
             self.indent(self.port_signals, 2)
