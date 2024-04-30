@@ -74,7 +74,7 @@ class VHDLSignal(Signal):
             return VHDLSignalType(signal_type)
 
     def _extract_default_value(self, signal_str):
-        default_value = re.findall(r':=\s*(.+)', signal_str, re.IGNORECASE)
+        default_value = re.findall(r':=\s*(\w+)', signal_str, re.IGNORECASE)
         if len(default_value) != 0:
             return default_value[0]
         else:
