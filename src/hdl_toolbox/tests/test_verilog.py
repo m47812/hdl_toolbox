@@ -58,3 +58,25 @@ def test_verilog_signal_extraction(source, result):
     assert len(result) == len(hdl_module.signals), f"Did not detect the correct amount of signals. Should: {len(result)} Was: {len(computed)}"
     for i, res in enumerate(result):
         assert hdl_module.signals[i].entity_string == res, f"Wrong signal content was \n{hdl_module.signals[i].entity_string}\n instead of:\n{res}"
+
+@pytest.mark.parametrize("source, result", [
+    (VERILOG_TEMPLATE_STRING, """module my_test_module
+    #(
+        parameter nb_input_bits = 2,
+        parameter C_wire_p = 36'hdc413630b
+    )
+    (
+        input clk,
+        input [24:0] f_target,
+        output reg [(15*nb_input_bits)-1:0] parameter_range,
+        output signed [nb_input_bits-1:0] a_signed_signal,
+        inout some_io,
+        output [nb_input_bits-1:0] initial_phase
+    );
+
+""")
+])
+def test_verilog_entity_generation_test(source, result):
+    HDLModule = Verilog_Module(source)
+    computed = HDLModule.entity_string
+    assert computed == result

@@ -163,16 +163,21 @@ class VerilogSignal(Signal):
 
     @property
     def entity_string(self):
-        direction_str = ""
+        entity_str = ""
+        if self.is_parameter:
+            entity_str += "parameter "
         if self.direction == SignalDirection.In:
-            direction_str = "input "
+            entity_str = "input "
         elif self.direction == SignalDirection.Out:
-            direction_str = "output "
+            entity_str = "output "
         elif self.direction == SignalDirection.InOut:
-            direction_str = "inout "
+            entity_str = "inout "
         if self.is_reg:
-            direction_str +=  "reg "
-        return direction_str + self.signal_type.string + self.name
+            entity_str +=  "reg "
+        entity_str += self.signal_type.string + self.name
+        if self.default_value is not None:
+            entity_str += " = " + self.default_value
+        return entity_str
 
     def instance_string(self):
         if self.connected_signal is None:
