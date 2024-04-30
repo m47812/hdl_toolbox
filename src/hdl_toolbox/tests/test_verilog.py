@@ -80,3 +80,25 @@ def test_verilog_entity_generation_test(source, result):
     HDLModule = Verilog_Module(source)
     computed = HDLModule.entity_string
     assert computed == result
+
+@pytest.mark.parametrize("source, result", [
+    (VERILOG_TEMPLATE_STRING, """my_test_module 
+    #(
+        .nb_input_bits(),
+        .C_wire_p()
+    )
+inst_my_test_module
+    (
+        .clk(),
+        .f_target(),
+        .parameter_range(),
+        .a_signed_signal(),
+        .some_io(),
+        .initial_phase()
+    );
+""")
+])
+def test_verilog_instance_generation_test(source, result):
+    HDLModule = Verilog_Module(source)
+    computed = HDLModule.instance_string("inst_my_test_module")
+    assert computed == result

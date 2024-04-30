@@ -28,3 +28,14 @@ class VerilogEntityTemplate(TemplateManager):
         else:
             template = template.replace("#PORT", "")
         return template
+    
+class VerilogInstanceTemplate(VerilogEntityTemplate):
+    def __init__(self, instance_name,  entity_name, port_signals = None, generic_signals = None) -> None:
+        super().__init__(entity_name, port_signals, generic_signals)
+        self._template = self.read_template_file_relative_path("./verilog/instance.txt")
+        self._generics_template = self.read_template_file_relative_path("./verilog/instance_generics.txt")
+        self.instance_name = instance_name
+
+    def __str__(self):
+        string = super(VerilogInstanceTemplate, self).__str__() 
+        return string.replace("#INSTANCE_NAME", self.instance_name)

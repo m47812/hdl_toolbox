@@ -2,7 +2,7 @@ import re
 
 from .hdl import HDL_Module
 from .signal import VerilogSignal
-from .templates import VerilogEntityTemplate
+from .templates import VerilogEntityTemplate, VerilogInstanceTemplate
 
 class Verilog_Module(HDL_Module):
     def __init__(self, source = None):
@@ -48,11 +48,31 @@ class Verilog_Module(HDL_Module):
     def signal_declaration_string(self, en_constants=True, en_signals=True):
         raise NotImplementedError("Can not be executed in the base class")
     def instance_string(self, instance_name=None):
-        raise NotImplementedError("Can not be executed in the base class") 
+        if len(self.generics) > 0:
+            genrics_str = self._signals_instance_format(self.generics)
+        else:
+            genrics_str = None
+        signals_str = self._signals_instance_format(self.signals)
+        if instance_name is None:
+            instance_name = "inst_" + self.entity_name
+        template = VerilogInstanceTemplate(
+            instance_name, 
+            self.entity_name,
+            signals_str,
+            genrics_str
+        )
+        return str(template)
     
     def _signals_entity_format(self, signals):
         signal_str = ""
         for signal in signals[:-1]:
             signal_str = signal_str + signal.entity_string + ",\n"
         signal_str = signal_str + signals[-1].entity_string
+        return signal_str
+    
+    def _signals_instance_format(self, signals):
+        signal_str = ""
+        for signal in signals[:-1]:
+            signal_str = signal_str + signal.instance_string() + ",\n"
+        signal_str = signal_str + signals[-1].instance_string()
         return signal_str

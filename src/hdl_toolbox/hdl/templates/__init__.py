@@ -1,3 +1,3 @@
 from .vhdl_templates import VHDLEntityTemplate, VHDLComponentTemplate, VHDLInstanceTemplate, VHDLArchitectureTemplate
 from .python_templates import COCOTBInterfaceTemplate
-from .verilog_templates import VerilogEntityTemplate
+from .verilog_templates import VerilogEntityTemplate, VerilogInstanceTemplate
