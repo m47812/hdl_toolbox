@@ -58,7 +58,7 @@ class VHDLSignal(Signal):
             return None
 
     def _extract_signal_type(self, signal_str) -> VHDLSignalType:
-        signal_type = re.findall(r':\s*(?:in|out|inout)?\s*(\w+)', signal_str, re.IGNORECASE)[0].strip()
+        signal_type = re.findall(r':\s*(?:(?:in|out|inout)\s+)?\s*(\w+)', signal_str, re.IGNORECASE)[0].strip()
         range_type_range = re.findall(r'(?<=range)\s+.+?to.*', signal_str, re.IGNORECASE)
         vector_type_range = re.findall(r'\(.+\)', signal_str, re.IGNORECASE)
         if len(range_type_range) == 0 and len(vector_type_range) > 0:
@@ -74,7 +74,7 @@ class VHDLSignal(Signal):
             return VHDLSignalType(signal_type)
 
     def _extract_default_value(self, signal_str):
-        default_value = re.findall(r':=\s*(.+)', signal_str, re.IGNORECASE)
+        default_value = re.findall(r':=\s*(\w+)', signal_str, re.IGNORECASE)
         if len(default_value) != 0:
             return default_value[0]
         else:

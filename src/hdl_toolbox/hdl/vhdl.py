@@ -7,36 +7,29 @@ from .templates import VHDLEntityTemplate, VHDLComponentTemplate, VHDLInstanceTe
 class VHDL_Module(HDL_Module):
     def __init__(self, source = None):
         if source is not None:
-            signals, generics = self._extract_signals_and_generics_strings(source)
+            source_no_comment = self._remove_comments(source)
+            self.entity_name, generics, signals = self._extract_entity_content(source_no_comment) 
             self.signals = [VHDLSignal(signal_str) for signal_str in signals]
             self.generics = [VHDLSignal(generic_str) for generic_str in generics]
-            self.entity_name = re.findall(r'entity\s+(\w+)\s+is', source, re.IGNORECASE)[0]
     
-    def _extract_signals_and_generics_strings(self, source):
-        source_no_comments = self._remove_comments(source)
-        entity_str = re.findall(r'entity.*?end(?:\s+entity)?\s+\w+\s*;', source_no_comments, re.IGNORECASE | re.DOTALL | re.MULTILINE)[0]
-        port_str = re.findall(r'port[\n|\s]*?\(.*?(?:end|generic)', entity_str, re.IGNORECASE| re.DOTALL | re.MULTILINE)
-        generic_str = re.findall(r'generic[\n|\s]*?\(.+?(?=(?:port[\n|\s]*?\(|end))', entity_str,re.IGNORECASE | re.DOTALL | re.MULTILINE)
-        if len(generic_str) != 0:
-            generics = self._extract_signal_strings(generic_str[0])
-        else:
-            generics = []
-        if len(port_str) != 0:
-            signals = self._extract_signal_strings(port_str[0])
-        else:
-            signals = []
-        return signals, generics
-
-    def _extract_signal_strings(self, source):
-        return re.findall(r'\w+\s*:\s*(?:in|out|inout)?\s*\w+\s*(?:\(.*\)|range\s+.+?to.*?)?(?:\s*:=.+?)?(?=(?:;|\s*\n\s*\)))', source, re.IGNORECASE)
+    def _extract_entity_content(self, source):
+        entity_name = re.findall(r'entity\s+(\w+)\s+is', source, re.IGNORECASE)[0]
+        entity_str = re.findall(r'entity.*?end(?:\s+entity)?\s+'+ entity_name +r'\s*;', source, re.IGNORECASE | re.DOTALL | re.MULTILINE)[0]
+        entity_str = re.sub(r'entity\s+\w+\s+is', '', entity_str)
+        entity_str = re.sub(r'end(?:\s+entity)?\s+\w+\s*;', '', entity_str)
+        subcomponents = re.split(r'(generic|port)[\n|\s]*\(', entity_str, re.IGNORECASE | re.DOTALL | re.MULTILINE)
+        signals, generics =  None, None
+        for i, component in enumerate(subcomponents):
+            if component.lower() == "port":
+                port_content = re.findall(r'(.*)\)[\n|\s]*;', subcomponents[i+1], re.IGNORECASE | re.DOTALL | re.MULTILINE)[0]
+                signals = re.split(r'(?:;)', port_content)
+            if component.lower() == "generic":
+                generic_content = re.findall(r'(.*)\)[\n|\s]*;', subcomponents[i+1], re.IGNORECASE | re.DOTALL | re.MULTILINE)[0]
+                generics = re.split(r'(?:;)', generic_content)
+        return entity_name, generics, signals
     
     def _remove_comments(self, source):
-        comments = re.findall(r'--.*', source)
-        source_no_comments = source
-        for comment in comments:
-            source_no_comments = source_no_comments.replace(comment, "-- ")
-        source_no_comments = source_no_comments.replace("-- ", "")
-        return source_no_comments
+        return re.sub(r'--.*?\n', '', source)
     
     @property
     def entity_string(self):
