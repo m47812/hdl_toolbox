@@ -1,7 +1,7 @@
 import re
 from colorama import Fore
 
-from .hdl import HDL_Module, VHDL_Module
+from .hdl import HDL_Module, VHDL_Module, Verilog_Module
 
 def _read_file(file_path):
     try:
@@ -15,8 +15,10 @@ def from_file(file_path) -> HDL_Module:
     file_content = _read_file(file_path)
     if file_path.endswith('.vhd'):
         return VHDL_Module(file_content)
+    elif file_path.endswith('.vhdl'):
+        return VHDL_Module(file_content)
     elif file_path.endswith('.v'):
-        raise NotImplementedError("Verilog files are not supported yet")
+        return Verilog_Module(file_content)
     else:
         raise TypeError("Inputed File Type Invalid")
     
