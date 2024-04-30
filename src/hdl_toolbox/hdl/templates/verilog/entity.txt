@@ -1,0 +1,2 @@
+module #ENTITY_NAME
+#GENERIC#PORT
