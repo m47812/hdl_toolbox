@@ -46,20 +46,19 @@ end RTL;"""
 @pytest.mark.parametrize("source, result", [
     (VHDL_TEMPLATE_STRING,
      [
-        "clk             : in  std_logic",
-        "rst             : in  std_logic",
-        "coord_x         : in  std_ulogic_vector((g_std_vec_size - 1) downto 0)",
-        "coord_y         : in  integer range 0 to g_std_vec_size - 1",
-        "coord_valid     : in  std_ulogic",
-        "threshold       : out std_ulogic_vector(7 downto 0)"
+        "clk : in std_logic",
+        "rst : in std_logic",
+        "coord_x : in std_ulogic_vector((g_std_vec_size - 1) downto 0)",
+        "coord_y : in integer range 0 to g_std_vec_size - 1",
+        "coord_valid : in std_ulogic",
+        "threshold : out std_ulogic_vector(7 downto 0)"
     ])
 ])
 def test_vhdl_signal_extraction(source, result):
-    hdl_module = VHDL_Module()
-    computed, _ = hdl_module._extract_signals_and_generics_strings(source)
-    assert len(result) == len(computed), f"Did not detect the correct amount of signals. Should: {len(result)} Was: {len(computed)}"
+    hdl_module = VHDL_Module(source)
+    assert len(result) == len(hdl_module.signals), f"Did not detect the correct amount of signals. Should: {len(result)} Was: {len(computed)}"
     for i, res in enumerate(result):
-        assert computed[i] == res, f"Wrong signal content was \n{computed[i]}\n instead of:\n{res}"
+        assert hdl_module.signals[i].entity_string == res, f"Wrong signal content was \n{hdl_module.signals[i].entity_string}\n instead of:\n{res}"
 
 
 @pytest.mark.parametrize("source, ref_result",[
@@ -116,4 +115,28 @@ def test_entity_generation_test(source, result):
 def test_instance_generation_test(source, result):
     HDLModule = VHDL_Module(source)
     computed = HDLModule.instance_string()
+    assert computed == result
+
+@pytest.mark.parametrize("source, result", [
+    (VHDL_TEMPLATE_STRING,
+     """class OUTPUT_POSITION_INTERFACE:
+    def __init__(self, dut):
+        self.clk = dut.clk
+        self.rst = dut.rst
+        self.coord_x = dut.coord_x
+        self.coord_y = dut.coord_y
+        self.coord_valid = dut.coord_valid
+        self.threshold = dut.threshold
+
+    def initalize_zeros(self):
+        self.clk.value = 0
+        self.rst.value = 0
+        self.coord_x.value = 0
+        self.coord_y.value = 0
+        self.coord_valid.value = 0
+""")
+])
+def test_cocotb_interface_generation(source, result):
+    HDLModule = VHDL_Module(source)
+    computed = HDLModule.cocotb_interface_string
     assert computed == result

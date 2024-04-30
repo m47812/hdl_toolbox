@@ -1,0 +1,5 @@
+class #ENTITY_NAME:
+    def __init__(self, dut):
+#SIGNALS
+    def initalize_zeros(self):
+#INPUTS
