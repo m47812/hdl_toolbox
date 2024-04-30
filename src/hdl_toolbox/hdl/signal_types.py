@@ -46,15 +46,15 @@ class VHDLRangeSignalType(VHDLSignalType):
         return self.name + " range " + str(self.range)
 
 class VerilogSignalType(SignalType):
-    def __init__(self, type_name, range:SignalRange=None):
-        super().__init__(type_name, range)
-
-    def __int__(self, vhdl_type):
-        raise NotImplementedError("Type Cast of signal types is not currently implemented")
+    def __init__(self, is_signed, range:SignalRange=None):
+        super().__init__(type_name=None, range=range)
+        self.is_signed = is_signed
 
     @property
     def string(self):
-        if self.range is None:
-            return ""
-        else:
-            return "[" + str(self.range) + "] "
+        type_str = ""
+        if self.is_signed:
+            type_str += "signed "
+        if not self.range is None:
+            type_str += "[" + str(self.range) + "] "
+        return type_str
