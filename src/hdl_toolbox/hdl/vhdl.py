@@ -31,12 +31,7 @@ class VHDL_Module(HDL_Module):
         return re.findall(r'\w+\s*:\s*(?:in|out|inout)?\s*\w+\s*(?:\(.*\)|range\s+.+?to.*?)?(?:\s*:=.+?)?(?=(?:;|\s*\n\s*\)))', source, re.IGNORECASE)
     
     def _remove_comments(self, source):
-        comments = re.findall(r'--.*', source)
-        source_no_comments = source
-        for comment in comments:
-            source_no_comments = source_no_comments.replace(comment, "-- ")
-        source_no_comments = source_no_comments.replace("-- ", "")
-        return source_no_comments
+        return re.sub(r'--.*?\n', '', source)
     
     @property
     def entity_string(self):
