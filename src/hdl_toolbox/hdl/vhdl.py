@@ -18,7 +18,7 @@ class VHDL_Module(HDL_Module):
         entity_str = re.sub(r'entity\s+\w+\s+is', '', entity_str)
         entity_str = re.sub(r'end(?:\s+entity)?\s+\w+\s*;', '', entity_str)
         subcomponents = re.split(r'(generic|port)[\n|\s]*\(', entity_str, re.IGNORECASE | re.DOTALL | re.MULTILINE)
-        signals, generics =  None, None
+        signals, generics =  [], []
         for i, component in enumerate(subcomponents):
             if component.lower() == "port":
                 port_content = re.findall(r'(.*)\)[\n|\s]*;', subcomponents[i+1], re.IGNORECASE | re.DOTALL | re.MULTILINE)[0]
