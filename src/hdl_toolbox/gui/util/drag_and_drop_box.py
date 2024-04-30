@@ -1,17 +1,21 @@
-from PyQt6.QtWidgets import QWidget, QLabel
+from PyQt6.QtWidgets import QWidget, QLabel, QVBoxLayout
 from PyQt6.QtGui import QPalette, QColor
 from PyQt6.QtCore import Qt
 
-class DragAndDropBox(QWidget):
-    def __init__(self):
-        super().__init__()
+from hdl_toolbox.util import from_file
 
+class DragAndDropBox(QWidget):
+    def __init__(self, files_added_callback=None):
+        super().__init__()
+        layout = QVBoxLayout()  # Create a QVBoxLayout
         self.label = QLabel("Drag and drop files here", self)
         self.label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.label.setGeometry(50, 50, 300, 200)
-
+        layout.addWidget(self.label)  # Add the label to the layout
+        self.setLayout(layout)  # Set the layout of the widget
         self.setAcceptDrops(True)
         self.set_hover_style(False)
+        self.files_added_callback = files_added_callback
 
     def dragEnterEvent(self, event):
         if event.mimeData().hasUrls():
@@ -27,10 +31,14 @@ class DragAndDropBox(QWidget):
         self.set_hover_style(False)
 
     def process_files(self, files):
-        # Do something with the file paths
-        print("File paths:")
-        for file in files:
-            print(file)
+        if self.files_added_callback:
+            hdl_modules = []
+            for file in files:
+                try:
+                    hdl_modules.append(from_file(file))
+                except Exception as e:
+                    print(f"Failed to parse file {file}: {e}")
+            self.files_added_callback(hdl_modules)
 
     def set_hover_style(self, is_hovered):
         palette = self.label.palette()
