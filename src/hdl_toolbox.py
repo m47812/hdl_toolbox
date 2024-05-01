@@ -55,7 +55,7 @@ def cocotb(files):
 @click.argument('files', nargs=-1, type=click.Path())
 @click.option('-t','--topentity', default=None, type=click.Path())
 def toplevel(files, topentity):
-    from hdl_toolbox.app import TopLevelCreator
+    from hdl_toolbox.app.top_level_creator import TopLevelCreator
     hdl_modules = [language_convert(from_file(file), 'vhdl') for file in files]
     if topentity is not None:
         toplevel_entity = language_convert(from_file(topentity), 'vhdl')
@@ -70,7 +70,7 @@ def toplevel(files, topentity):
 @click.argument('files', nargs=-1, type=click.Path())
 def dtt(files):
     """Prints a Dont_Touch top level file for the given entity to perform standalone synthesis (not connecting the entity) on Xilinx Devices"""
-    from hdl_toolbox.app import VHDLDontTouchTopLevelCreator
+    from hdl_toolbox.app.dont_touch_top_level import VHDLDontTouchTopLevelCreator
     hdl_modules = [language_convert(from_file(file), 'vhdl') for file in files]
     creator = VHDLDontTouchTopLevelCreator(hdl_modules)
     print_title("Printing Dont Touch Synthesis Top Level")

@@ -1,2 +1,0 @@
-from .top_level_creator import TopLevelCreator
-from .dont_touch_top_level import VHDLDontTouchTopLevelCreator
