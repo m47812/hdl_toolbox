@@ -30,22 +30,24 @@ class Signal:
     @property
     def constant_declaration_string(self):
         raise NotImplemented("constant_declaration_string is not defined for the base class")
+    def to_verilog(self):
+        raise NotImplementedError("Can not be executed in the base class")
+    def to_vhdl(self):
+        raise NotImplementedError("Can not be executed in the base class")
 
 class VHDLSignal(Signal):
-    def __init__(self, name, signal_type, direction : SignalDirection = None):
-        super().__init__(name, signal_type, direction)
-
-        """Generates Object from signal String
-        """
-    def __init__(self, signal_str):
-        signal_name = re.findall(r'\w+(?=\s*:)', signal_str, re.IGNORECASE)[0]
-        super().__init__(
-            signal_name,
-            self._extract_signal_type(signal_str),
-            self._extract_signal_direction(signal_str),
-            self._extract_default_value(signal_str)
-        )
-
+    def __init__(self,signal_str=None, name=None, signal_type=None, direction : SignalDirection = None, default_value = None):
+        if signal_str is None:
+            super().__init__(name, signal_type, direction, default_value)
+        else:
+            signal_name = re.findall(r'\w+(?=\s*:)', signal_str, re.IGNORECASE)[0]
+            super().__init__(
+                signal_name,
+                self._extract_signal_type(signal_str),
+                self._extract_signal_direction(signal_str),
+                self._extract_default_value(signal_str)
+            )
+        
     def _extract_signal_direction(self, signal_str) -> SignalDirection:
         signal_direction = re.findall(r'(?<=:)\s*\w+', signal_str, re.IGNORECASE)[0].strip().lower()
         if signal_direction == "in":
@@ -112,22 +114,31 @@ class VHDLSignal(Signal):
         if self.default_value is None:
             default_val = "INSERT_DEFAULT_VALUE_HERE"
         return "constant " + self.name + " : " + self.signal_type.string + " := " + default_val + ";"
+    def to_verilog(self):
+        if self.direction is None:
+            return VerilogSignal(name=self.name, signal_type=self.signal_type.to_verilog(), is_parameter=True, is_reg=False, direction=self.direction, default_value=self.default_value)
+        else:
+            return VerilogSignal(name=self.name, signal_type=self.signal_type.to_verilog(), is_parameter=False, is_reg=False, direction=self.direction, default_value=self.default_value)
+    def to_vhdl(self):
+        return self
 
 class VerilogSignal(Signal):
-    def __init__(self, name, signal_type, direction : SignalDirection = None):
-        super().__init__(name, signal_type, direction)
-
-    def __init__(self, signal_str):
-        self.is_reg = len(re.findall(r'(?<!\w)reg\s', signal_str, re.IGNORECASE)) != 0
-        signal_str = re.sub(r'(?<!\w)reg\s', "", signal_str, flags=re.IGNORECASE)
-        signal_name = re.findall(r'(?:(?:input|output|inout|parameter)\s+)(?:signed\s+)?(?:\[.*?\])?\s*(\w+)', signal_str, re.IGNORECASE)[0]
-        self.is_parameter = len(re.findall(r'(?<!\w)parameter\s', signal_str, re.IGNORECASE)) != 0
-        super().__init__(
-            signal_name,
-            self._extract_signal_type(signal_str),
-            self._extract_signal_direction(signal_str),
-            self._extract_default_value(signal_str)
-        )
+    def __init__(self, signal_str=None, name=None, signal_type=None, is_parameter=None, is_reg=None,  direction : SignalDirection = None, default_value = None):
+        if signal_str is None:
+            super().__init__(name, signal_type, direction, default_value)
+            self.is_parameter = is_parameter
+            self.is_reg = is_reg
+        else:
+            self.is_reg = len(re.findall(r'(?<!\w)reg\s', signal_str, re.IGNORECASE)) != 0
+            signal_str = re.sub(r'(?<!\w)reg\s', "", signal_str, flags=re.IGNORECASE)
+            signal_name = re.findall(r'(?:(?:input|output|inout|parameter)\s+)(?:signed\s+)?(?:\[.*?\])?\s*(\w+)', signal_str, re.IGNORECASE)[0]
+            self.is_parameter = len(re.findall(r'(?<!\w)parameter\s', signal_str, re.IGNORECASE)) != 0
+            super().__init__(
+                signal_name,
+                self._extract_signal_type(signal_str),
+                self._extract_signal_direction(signal_str),
+                self._extract_default_value(signal_str)
+            )    
 
     def _extract_signal_direction(self, signal_str) -> SignalDirection:
         signal_direction = re.findall(r'(?<!\w)(input|output|inout)\s+', signal_str, re.IGNORECASE)
@@ -188,3 +199,7 @@ class VerilogSignal(Signal):
     @property
     def declaration_string(self):
         return "wire " + self.signal_type.string + self.name
+    def to_verilog(self):
+        return self
+    def to_vhdl(self):
+        return VHDLSignal(name=self.name, signal_type=self.signal_type.to_vhdl(self.is_parameter), direction=self.direction, default_value=self.default_value)
