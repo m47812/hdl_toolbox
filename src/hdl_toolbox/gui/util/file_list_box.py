@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QListWidget, QPushButton, QWidget
+from PyQt6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QListWidget, QPushButton, QWidget, QAbstractItemView
 
 from hdl_toolbox.hdl import HDL_Module
 
@@ -8,6 +8,7 @@ class FileListBox(QWidget):
         # PYQT6 code
         layout = QVBoxLayout()
         self.listbox = QListWidget()
+        self.listbox.setSelectionMode(QAbstractItemView.SelectionMode.MultiSelection)
         layout.addWidget(self.listbox)
         self.remove_button = QPushButton("Remove Selected File")
         self.remove_button.setStyleSheet("background-color: #807975; color: white; font-weight: bold;")

@@ -24,7 +24,7 @@ class HDLHighlighter(QSyntaxHighlighter):
                     "\\belse\\b", "\\bcase\\b", "\\bendcase\\b", "\\bfor\\b", "\\bwhile\\b",
                     "\\bfunction\\b", "\\bendfunction\\b", "\\btask\\b", "\\bendtask\\b", "\\bbegin\\b",
                     "\\bend\\b", "\\blogic\\b", "\\binteger\\b", "\\bgenvar\\b", "\\bparameter\\b",
-                    "\\blocalparam\\b", "\\bgenerate\\b", "\\bgenvar\\b", "\\bfor\\b", "\\bendgenerate\\b"]
+                    "\\blocalparam\\b", "\\bgenerate\\b", "\\bgenvar\\b", "\\bfor\\b", "\\bendgenerate\\b", "\\bsignal\\b", "\\bconstant\\b", "\\battribute\\b"]
 
         self.highlighting_rules = [(QRegularExpression(pattern), keyword_format) for pattern in keyword_patterns]
 
@@ -37,8 +37,8 @@ class HDLHighlighter(QSyntaxHighlighter):
 
 
 class CodeViewer(QMainWindow):
-    def __init__(self, name, text):
-        super().__init__()
+    def __init__(self, name, text, parent):
+        super().__init__(parent)
 
         self.setWindowTitle("Code Viewer: " + name)
         self.setGeometry(100, 100, 400, 300)
