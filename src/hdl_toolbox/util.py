@@ -36,3 +36,12 @@ def language_convert(hdl_module, output_language) -> HDL_Module:
         return hdl_module.to_verilog()
     else:
         raise ValueError("Invalid Output Language")
+    
+def launch_gui():
+    from .gui.main_gui.hdl_toolbox_gui import HDLToolboxGUI
+    from PyQt6.QtWidgets import QApplication
+    import sys
+    app = QApplication(sys.argv)
+    gui = HDLToolboxGUI()
+    gui.show()
+    sys.exit(app.exec())
