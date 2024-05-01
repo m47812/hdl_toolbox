@@ -131,6 +131,7 @@ class VerilogSignal(Signal):
         else:
             self.is_reg = len(re.findall(r'(?<!\w)reg\s', signal_str, re.IGNORECASE)) != 0
             signal_str = re.sub(r'(?<!\w)reg\s', "", signal_str, flags=re.IGNORECASE)
+            signal_str = re.sub(r'(?<!\w)wire\s', "", signal_str, flags=re.IGNORECASE)
             signal_name = re.findall(r'(?:(?:input|output|inout|parameter)\s+)(?:signed\s+)?(?:\[.*?\])?\s*(\w+)', signal_str, re.IGNORECASE)[0]
             self.is_parameter = len(re.findall(r'(?<!\w)parameter\s', signal_str, re.IGNORECASE)) != 0
             super().__init__(
