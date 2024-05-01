@@ -34,3 +34,7 @@ class HDL_Module:
         raise NotImplementedError("Can not be executed in the base class")
     def instance_string(self, instance_name=None):
         raise NotImplementedError("Can not be executed in the base class")
+    def to_verilog(self):
+        raise NotImplementedError("Can not be executed in the base class")
+    def to_vhdl(self):
+        raise NotImplementedError("Can not be executed in the base class")

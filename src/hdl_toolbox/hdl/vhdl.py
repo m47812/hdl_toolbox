@@ -11,6 +11,10 @@ class VHDL_Module(HDL_Module):
             self.entity_name, generics, signals = self._extract_entity_content(source_no_comment) 
             self.signals = [VHDLSignal(signal_str) for signal_str in signals]
             self.generics = [VHDLSignal(generic_str) for generic_str in generics]
+        else:
+            self.entity_name = ""
+            self.generics = []
+            self.signals = []
     
     def _extract_entity_content(self, source):
         entity_name = re.findall(r'entity\s+(\w+)\s+is', source, re.IGNORECASE)[0]
@@ -98,3 +102,14 @@ class VHDL_Module(HDL_Module):
             signal_str = signal_str + signal.instance_string() + ",\n"
         signal_str = signal_str + signals[-1].instance_string()
         return signal_str
+    
+    def to_verilog(self):
+        from .verilog import Verilog_Module
+        verilog_module = Verilog_Module()
+        verilog_module.entity_name = self.entity_name
+        verilog_module.signals = [signal.to_verilog() for signal in self.signals]
+        verilog_module.generics = [generic.to_verilog() for generic in self.generics]
+        return verilog_module
+        
+    def to_vhdl(self):
+        return self

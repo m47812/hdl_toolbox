@@ -22,7 +22,7 @@ class VHDLDontTouchTopLevelCreator:
             signals += module.signal_declaration_string() + "\n"
             instance_name = "inst_" + module.entity_name
             instances += module.instance_string(instance_name=instance_name) + "\n\n"
-            dont_touch_setting += "attribute dont_touch of " + instance_name + " : label is \"true\";"
+            dont_touch_setting += "attribute dont_touch of " + instance_name + " : label is \"true\";\n"
         signals += "\n" + dont_touch_setting
         template = VHDLArchitectureTemplate(
             instances=instances,
