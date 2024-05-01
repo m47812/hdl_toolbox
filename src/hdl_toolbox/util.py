@@ -27,3 +27,12 @@ def print_title(title):
 
 def print_filename(filename):
     print("Processing File: " + Fore.GREEN + filename + Fore.RESET + "\n")
+
+def language_convert(hdl_module, output_language) -> HDL_Module:
+    output_language = output_language.lower()
+    if output_language == "vhdl" or output_language == "vhd":
+        return hdl_module.to_vhdl()
+    elif output_language == "verilog" or output_language == "v":
+        return hdl_module.to_verilog()
+    else:
+        raise ValueError("Invalid Output Language")
