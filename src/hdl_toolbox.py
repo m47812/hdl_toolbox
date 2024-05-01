@@ -67,6 +67,11 @@ def toplevel(files, topentity):
     print("\n" + creator.generate_architecture() + "\n")
 
 @main.command()
+def gui():
+    from hdl_toolbox.util import launch_gui
+    launch_gui()
+
+@main.command()
 @click.argument('files', nargs=-1, type=click.Path())
 def dtt(files):
     """Prints a Dont_Touch top level file for the given entity to perform standalone synthesis (not connecting the entity) on Xilinx Devices"""
