@@ -1,5 +1,5 @@
 import sys
-from PyQt6.QtWidgets import QApplication, QWidget, QVBoxLayout, QPushButton, QGridLayout
+from PyQt6.QtWidgets import QApplication, QWidget, QVBoxLayout, QPushButton, QGridLayout, QGroupBox, QCheckBox
 from PyQt6.QtGui import QDragEnterEvent, QDropEvent, QDrag
 from PyQt6.QtCore import QEvent, Qt
 
@@ -81,7 +81,11 @@ class CommandButtonPanel(QWidget):
         self.bt_component = QPushButton("Component String")
         self.bt_instance = QPushButton("Instance String")
         self.bt_dtt = QPushButton("Don't Touch Top Level")
-        self.bt_toplevel = QPushButton("Top Level")
+        self.bt_toplevel = QPushButton("Create Top Level")
+        self.cb_toplevel_auto_connect = QCheckBox("Auto Connect")
+        self.cb_toplevel_auto_connect.setChecked(True)
+        self.cb_toplevel_auto_connect.setToolTip("Automatically connect the top level entity to subordinate modules if the signals have the same name and direction")
+        self.gb_toplevel = QGroupBox("Top Level Connector")
         self.bt_toplevel.setToolTip("Select the modules to instantiate in the list above. If you additionally want to specify a top level entity, drag on to the field on the left.")
         self.bt_coco = QPushButton("COCOTB Interface")
         self.language_selection_box = LanguageSelectionBox(self.language_selection_changed_callback)
@@ -107,13 +111,15 @@ class CommandButtonPanel(QWidget):
         grid_layout.addWidget(self.bt_entity, 0, 0, 1,2)
         grid_layout.addWidget(self.bt_instance, 1, 0, 1,2)
         grid_layout.addWidget(self.language_selection_box, 0, 2, 2,1)
-        top_level_creator_grid.addWidget(self.bt_top_level_etity, 0, 0)
-        top_level_creator_grid.addWidget(self.bt_toplevel, 0, 1)
         layout.addLayout(grid_layout)
-        layout.addLayout(top_level_creator_grid)
         layout.addWidget(self.bt_component)
         layout.addWidget(self.bt_dtt)
         layout.addWidget(self.bt_coco)
+        top_level_creator_grid.addWidget(self.bt_top_level_etity, 0, 0, 0, 2)
+        top_level_creator_grid.addWidget(self.bt_toplevel, 0, 2, 0, 2)
+        top_level_creator_grid.addWidget(self.cb_toplevel_auto_connect, 0, 4, 0, 1)
+        self.gb_toplevel.setLayout(top_level_creator_grid)
+        layout.addWidget(self.gb_toplevel)
         self.setLayout(layout)
 
         self.selected_language = "vhdl"
@@ -134,6 +140,6 @@ class CommandButtonPanel(QWidget):
             self.bt_component.setEnabled(False)
 
     def top_level_creator_clicked(self):
-        self.top_level_clicked_callback(self.selected_top_level)
+        self.top_level_clicked_callback(self.selected_top_level, self.cb_toplevel_auto_connect.isChecked())
 
 

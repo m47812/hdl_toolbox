@@ -61,7 +61,7 @@ class TopLevelModulePanel(QScrollArea):
                     if set_connected:
                         button.setStyleSheet("QPushButton { background-color: blue; }")
                     else:
-                        button.setStyleSheet("QPushButton { background-color: gray; }")
+                        button.setStyleSheet("")
     @pyqtSlot()
     def on_button_clicked(self):
         btn = self.sender()

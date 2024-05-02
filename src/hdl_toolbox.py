@@ -54,7 +54,7 @@ def cocotb(files):
 @main.command()
 @click.argument('files', nargs=-1, type=click.Path())
 @click.option('-t','--topentity', default=None, type=click.Path())
-@click.option('-a', '--auto', is_flag=True, default=False, help="Automatically connect the top level entity subordinate modules if the signals have the same name and direction")
+@click.option('-a', '--auto', is_flag=True, default=False, help="Automatically connect the top level entity to subordinate modules if the signals have the same name and direction")
 def toplevel(files, topentity, auto):
     from hdl_toolbox.app.top_level_creator import TopLevelCreator
     hdl_modules = [language_convert(from_file(file), 'vhdl') for file in files]

@@ -63,12 +63,12 @@ class HDLToolboxGUI(QMainWindow):
         viewer = CodeViewer("Don't Touch Top Level", str(creator), self)
         viewer.show()
 
-    def bt_toplevel_clicked(self, toplevel_entity):
+    def bt_toplevel_clicked(self, toplevel_entity, auto_connect):
         selected_modules = self.file_list_box.get_selected_files()
         toplevel_entity = language_convert(toplevel_entity, "vhdl") if toplevel_entity is not None else None
         converted_modules = [language_convert(module, "vhdl") for module in selected_modules]
         creator = TopLevelCreator(converted_modules, toplevel_entity=toplevel_entity)
-        creator.execute_as_dialog(auto_connect=False)
+        creator.execute_as_dialog(auto_connect=auto_connect)
         viewer = CodeViewer("Top Level", creator.generate_architecture(), self)
         viewer.show()
 

@@ -44,7 +44,7 @@ class TopLevelCreator:
             )  
         return parent_panel
     
-    def _auto_connect(self, top_panel, en_signal_mapping=True, en_generic_mapping=True):
+    def _auto_connect(self, top_panel, en_signal_mapping=True, en_generic_mapping=False): #Generics currently deactivated as they would get declared as signals
         if not self.toplevel_entity is None:
             if en_signal_mapping:
                 for top_signal in self.toplevel_entity.signals:
