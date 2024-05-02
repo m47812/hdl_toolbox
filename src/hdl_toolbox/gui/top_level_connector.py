@@ -1,5 +1,5 @@
-from PyQt6.QtWidgets import QWidget, QGridLayout, QPushButton, QApplication, QLabel, QGroupBox, QMessageBox, QScrollArea, QHBoxLayout, QVBoxLayout
-from PyQt6.QtCore import pyqtSlot
+from PyQt6.QtWidgets import QWidget, QGridLayout, QPushButton, QApplication, QLabel, QGroupBox, QMessageBox, QScrollArea, QHBoxLayout, QVBoxLayout, QDialog
+from PyQt6.QtCore import Qt, pyqtSlot
 import sys
 
 class SignalButton(QPushButton):
@@ -63,10 +63,21 @@ class TopLevelModulePanel(QScrollArea):
             btn.setStyleSheet("QPushButton { background-color: green; }")
             self.clicked_buttons = [btn]
 
+class TopLevelDialogWrapper(QDialog):
+    def __init__(self, main_panel) -> None:
+        super().__init__()
+        layout = QVBoxLayout()
+        layout.addWidget(main_panel)
+        self.setLayout(layout)
+
 class TopLevelModuleApplication:
-    def __init__(self) -> None:
+    def create_application(self):
         self.app = QApplication(sys.argv)
 
-    def top_level_connector_execute(self, main_panel : TopLevelModulePanel):
-        main_panel.show()
+    def exec_as_application(self, parent_panel):
+        parent_panel.show()
         self.app.exec()
+
+    def exec_as_dialog(self, parent_panel):
+        dialog = TopLevelDialogWrapper(parent_panel)
+        dialog.exec()

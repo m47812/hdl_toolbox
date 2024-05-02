@@ -52,7 +52,7 @@ class CommandButtonPanel(QWidget):
         layout.addLayout(grid_layout)
         layout.addWidget(self.bt_component)
         layout.addWidget(self.bt_dtt)
-        #layout.addWidget(bt_toplevel) # Not yet implemented
+        layout.addWidget(self.bt_toplevel)
         layout.addWidget(self.bt_coco)
         self.setLayout(layout)
 

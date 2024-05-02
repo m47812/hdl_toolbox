@@ -63,7 +63,12 @@ class HDLToolboxGUI(QMainWindow):
         viewer.show()
 
     def bt_toplevel_clicked(self):
-        raise NotImplementedError("Toplevel creator not implemented in GUI yet")
+        selected_modules = self.file_list_box.get_selected_files()
+        converted_modules = [language_convert(module, "vhdl") for module in selected_modules]
+        creator = TopLevelCreator(converted_modules, toplevel_entity=None)
+        creator.execute_as_dialog()
+        viewer = CodeViewer("Top Level", creator.generate_architecture(), self)
+        viewer.show()
 
     def bt_coco_clicked(self):
         selected_modules = self.file_list_box.get_selected_files()

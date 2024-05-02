@@ -14,6 +14,16 @@ class TopLevelCreator:
 
     def execute(self):
         app = TopLevelModuleApplication()
+        app.create_application()
+        parent_panel = self._create_panel()
+        app.exec_as_application(parent_panel)
+    
+    def execute_as_dialog(self):
+        app = TopLevelModuleApplication()
+        parent_panel = self._create_panel()
+        app.exec_as_dialog(parent_panel)
+
+    def _create_panel(self):
         parent_panel = TopLevelModulePanel(self.add_connection_callback)
         if self.toplevel_entity is not None:
            parent_panel.addEntityPanel(
@@ -27,8 +37,8 @@ class TopLevelCreator:
                 module.entity_name,
                 [signal for signal in module.signals if signal.direction == SignalDirection.In or signal.direction == SignalDirection.InOut],
                 [signal for signal in module.signals if signal.direction == SignalDirection.Out]
-            )
-        app.top_level_connector_execute(parent_panel)
+            )  
+        return parent_panel
     
     def add_connection_callback(self, source, destination):
         if self.toplevel_entity is not None:
