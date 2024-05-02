@@ -44,7 +44,7 @@ class TopLevelCreator:
             )  
         return parent_panel
     
-    def _auto_connect(self, top_panel, en_signal_mapping=True, en_generic_mapping=False): #Generics currently deactivated as they would get declared as signals
+    def _auto_connect(self, top_panel, en_signal_mapping=True, en_generic_mapping=True):
         if not self.toplevel_entity is None:
             if en_signal_mapping:
                 for top_signal in self.toplevel_entity.signals:
@@ -60,7 +60,7 @@ class TopLevelCreator:
                     for module in self.hdl_modules:
                         for generic in module.generics:
                             if top_generic.name == generic.name:
-                                self.add_connection_callback(top_generic, generic)
+                                self.top_level_connections.append((top_generic, generic)) #Not done via add function because it would otherwise not be detected as a toplevel signal
     
     def add_connection_callback(self, source, destination):
         if self.toplevel_entity is not None:
