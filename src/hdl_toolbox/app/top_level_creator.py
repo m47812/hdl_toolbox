@@ -12,15 +12,19 @@ class TopLevelCreator:
         self.top_level_connections = []
         self.toplevel_entity = toplevel_entity
 
-    def execute(self):
+    def execute(self, auto_connect=False):
         app = TopLevelModuleApplication()
         app.create_application()
         parent_panel = self._create_panel()
+        if auto_connect:
+            self._auto_connect(parent_panel)
         app.exec_as_application(parent_panel)
     
-    def execute_as_dialog(self):
+    def execute_as_dialog(self, auto_connect=False):
         app = TopLevelModuleApplication()
         parent_panel = self._create_panel()
+        if auto_connect:
+            self._auto_connect(parent_panel)
         app.exec_as_dialog(parent_panel)
 
     def _create_panel(self):
@@ -39,6 +43,24 @@ class TopLevelCreator:
                 [signal for signal in module.signals if signal.direction == SignalDirection.Out]
             )  
         return parent_panel
+    
+    def _auto_connect(self, top_panel, en_signal_mapping=True, en_generic_mapping=True):
+        if not self.toplevel_entity is None:
+            if en_signal_mapping:
+                for top_signal in self.toplevel_entity.signals:
+                    for module in self.hdl_modules:
+                        for signal in module.signals:
+                            if top_signal.name == signal.name and top_signal.direction == signal.direction:
+                                self.add_connection_callback(top_signal, signal)
+                signals_connected = [connection[0] for connection in self.top_level_connections]
+                signals_connected.extend([connection[1] for connection in self.top_level_connections])
+                top_panel.set_signal_connected_status(signals_connected, set_connected=True)
+            if en_generic_mapping:
+                for top_generic in self.toplevel_entity.generics:
+                    for module in self.hdl_modules:
+                        for generic in module.generics:
+                            if top_generic.name == generic.name:
+                                self.add_connection_callback(top_generic, generic)
     
     def add_connection_callback(self, source, destination):
         if self.toplevel_entity is not None:

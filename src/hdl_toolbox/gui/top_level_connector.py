@@ -42,11 +42,26 @@ class TopLevelModulePanel(QScrollArea):
         self.setWidgetResizable(True)
         self.setWidget(self.scrollContent)
         self.add_connection_callback = add_connection_callback
+        self.entity_panels = []
 
     def addEntityPanel(self, title, button_list1, button_list2, is_top_level_entity=False):
         panel = EntityPanel(self.on_button_clicked, title, button_list1, button_list2, is_toplevel=is_top_level_entity)
         self.layout.addWidget(panel)
+        self.entity_panels.append(panel)
 
+    def set_signal_connected_status(self, signals, set_connected=True):
+        local_signals = None
+        if isinstance(signals, list):
+            local_signals = signals
+        else:
+            local_signals = [signals]
+        for entity_panel in self.entity_panels:
+            for button in entity_panel.buttons:
+                if button.signal in local_signals:
+                    if set_connected:
+                        button.setStyleSheet("QPushButton { background-color: blue; }")
+                    else:
+                        button.setStyleSheet("QPushButton { background-color: gray; }")
     @pyqtSlot()
     def on_button_clicked(self):
         btn = self.sender()

@@ -68,7 +68,7 @@ class HDLToolboxGUI(QMainWindow):
         toplevel_entity = language_convert(toplevel_entity, "vhdl") if toplevel_entity is not None else None
         converted_modules = [language_convert(module, "vhdl") for module in selected_modules]
         creator = TopLevelCreator(converted_modules, toplevel_entity=toplevel_entity)
-        creator.execute_as_dialog()
+        creator.execute_as_dialog(auto_connect=False)
         viewer = CodeViewer("Top Level", creator.generate_architecture(), self)
         viewer.show()
 
