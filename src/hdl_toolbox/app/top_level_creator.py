@@ -60,6 +60,7 @@ class TopLevelCreator:
             components = components + module.component_string + "\n\n"
             instances = instances + module.instance_string() + "\n\n"
         template = VHDLArchitectureTemplate(
+            entity_name= "top_level" if self.toplevel_entity is None else self.toplevel_entity.entity_name,
             instances = instances, 
             components = components,
             signals = signals 
