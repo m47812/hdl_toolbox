@@ -18,7 +18,7 @@ class VHDL_Module(HDL_Module):
     
     def _extract_entity_content(self, source):
         entity_name = re.findall(r'entity\s+(\w+)\s+is', source, re.IGNORECASE)[0]
-        entity_str = re.findall(r'entity.*?end(?:\s+entity)?\s+'+ entity_name +r'\s*;', source, re.IGNORECASE | re.DOTALL | re.MULTILINE)[0]
+        entity_str = re.findall(r'entity\s+' + entity_name + r'\s+is\s+.*?end(?:\s+entity)', source, re.IGNORECASE | re.DOTALL | re.MULTILINE)[0]
         entity_str = re.sub(r'entity\s+\w+\s+is', '', entity_str, flags=re.MULTILINE | re.DOTALL | re.IGNORECASE)
         entity_str = re.sub(r'end(?:\s+entity)?\s+\w+\s*;', '', entity_str, flags=re.MULTILINE | re.DOTALL | re.IGNORECASE)
         subcomponents = re.split(r'(generic|port)[\n|\s]*\(', entity_str, flags=re.IGNORECASE | re.DOTALL | re.MULTILINE)
