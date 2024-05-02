@@ -22,7 +22,8 @@ class HDLToolboxGUI(QMainWindow):
             self.bt_instance_clicked,
             self.bt_dtt_clicked,
             self.bt_toplevel_clicked,
-            self.bt_coco_clicked
+            self.bt_coco_clicked,
+            self.file_list_box.get_module_at_index
         )
         drag_and_drop_box = DragAndDropBox(files_added_callback=self.file_list_box.add_files)
         layout.addWidget(drag_and_drop_box, 0, 0) 
@@ -62,10 +63,11 @@ class HDLToolboxGUI(QMainWindow):
         viewer = CodeViewer("Don't Touch Top Level", str(creator), self)
         viewer.show()
 
-    def bt_toplevel_clicked(self):
+    def bt_toplevel_clicked(self, toplevel_entity):
         selected_modules = self.file_list_box.get_selected_files()
+        toplevel_entity = language_convert(toplevel_entity, "vhdl") if toplevel_entity is not None else None
         converted_modules = [language_convert(module, "vhdl") for module in selected_modules]
-        creator = TopLevelCreator(converted_modules, toplevel_entity=None)
+        creator = TopLevelCreator(converted_modules, toplevel_entity=toplevel_entity)
         creator.execute_as_dialog()
         viewer = CodeViewer("Top Level", creator.generate_architecture(), self)
         viewer.show()
