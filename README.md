@@ -20,8 +20,8 @@ The HDL Toolbox is a collection of useful functions that can help with some of t
 - RegEx-based parsing of Verilog/VHDL header syntax to objects and attributes (easy expandability to other hdl code generation functions)
 
 ## How to use
-The toolbox can be used in three ways (user guide coming soon)
-- Console based
+The toolbox can be used in three ways. See [user guide](/doc/user_guide_console.md) on how to use and detailed feature description.
+- [Console based](/doc/user_guide_console.md)
 - Through GUI
 - As Python classes
 
