@@ -1,6 +1,6 @@
 # HDL Toolbox: User Guide Console
 
-This user guide provides some instruction on how to use the toolbox in console mode. It assumes usage in a tipical Linux based shell environment but can generally be used on any system with python installed.
+This user guide provides some instructions on using the toolbox in console mode. It assumes usage in a typical Linux-based shell environment but can generally be used on any system with Python installed.
 
 ## How to run
 
@@ -12,7 +12,7 @@ I would recommend setting an alias for this:
 
 ``alias hdltoolbox='python3 <PROJECT_PATH>/src/hdl_toolbox.py'``
 
-In this guide the command ``hdltoolbox`` will be used refering to the alias above.
+In this guide, the command ``hdltoolbox`` will be used referring to the alias above.
 
 
 ## Commands
@@ -35,7 +35,7 @@ end entity simple_adder;
 
 ``hdltoolbox --help``
 
-Provides a list of all available functions. Additionally use ``hdltoolbox <COMMAND NAME> --help`` on any command to show help for the command specifially.
+Provides a list of all available functions. Additionally use ``hdltoolbox <COMMAND NAME> --help`` on any command to show help for the command specifically.
 
 ### Component
 
@@ -51,7 +51,7 @@ Generates:
 
 ``hdltoolbox entity [OPTIONS] [FILES]``
 
-- ``-o`` or ``-output_language``: Determines if output is printed as VHDL (``vhdl`` or ``vhd``)  or Verilog (``verilog`` or ``v``)
+- ``-o`` or ``--output_language``: Determines if output is printed as VHDL (``vhdl`` or ``vhd``)  or Verilog (``verilog`` or ``v``)
 - ``FILES``: Any number of VHDL and/or Verilog files (space separated)
 
 Prints entity declarations for the specified files in the desired output language. Note that the translation is only intended for common standard data types.
@@ -74,7 +74,7 @@ module simple_adder
 ### Instance
 
 ``hdltoolbox instance [OPTIONS] [FILES]``
-- ``-o`` or ``-output_language``: Determines if output is printed as VHDL (``vhdl`` or ``vhd``)  or Verilog (``verilog`` or ``v``)
+- ``-o`` or ``--output_language``: Determines if output is printed as VHDL (``vhdl`` or ``vhd``)  or Verilog (``verilog`` or ``v``)
 - ``FILES``: Any number of VHDL and/or Verilog files (space separated)
 
 Prints instance declarations for the specified files in the desired output language.
@@ -100,7 +100,7 @@ inst_simple_adder
 ``cocotb [FILES]``
 - ``FILES``: Any number of VHDL and/or Verilog files (space separated)
 
-Prints a simple CocoTB Interface that makes the names of the (top-level) signals of the entity explicit for usage in python. It also provides a initialize zeros method that can be called to initialize all inputs to zero often useful fo simulations to set default values.
+Prints a simple CocoTB Interface that makes the names of the (top-level) signals of the entity explicit for usage in python. It also provides an "initialize zeros" method that can be called to initialize all inputs to zero often useful fo simulations to set default values.
 
 Example: ``hdltoolbox cocotb simple_adder.vhd`
 ```python
@@ -132,10 +132,10 @@ Executing this command will open a GUI window in which you can simply connect si
 
 Colors: Green=Currently selected source, Red=Currently selected destination, Blue=Already connected
 
-The signal in the signal declaration will take the name of the source signal in its entity. Having multiple entity outputs with the same name can lead to conflicts and should be connected manually afterwards. In the current version the tool has no option to delete connections. Currently only the creation of VHDL top-level architectures is supported, you can however instantiate sub-modules written in verilog and use them in the top-level.
+The signal in the signal declaration will take the name of the source signal in its entity. Having multiple entity outputs with the same name can lead to conflicts and should be connected manually afterwards. In the current version, the tool has no option to delete connections. Currently, only the creation of VHDL top-level architectures is supported, you can however instantiate sub-modules written in Verilog and use them in the top-level.
 
 Example:
-``hdltoolbox toplevel -a -t simple_adder.vhd simple_adder.vhd`` Simply create a wrapper top level with the same signals and auto connect them. After closing the GUI with no modifications it will show:
+``hdltoolbox toplevel -a -t simple_adder.vhd simple_adder.vhd`` Simply create a wrapper top level with the same signals and auto-connect them. After closing the GUI with no modifications it will show:
 ```vhdl
 architecture rtl of simple_adder is
 -- Component Declarations
@@ -183,7 +183,7 @@ Launches the GUI version of the hdl toolbox. It can also be launched trough exec
 ```hdltoolbox dtt [FILES]```
 - ``FILES``: Any number of VHDL and/or Verilog files (space separated)
 
-Creates an empty top-level entity and an instance of all given files and its signals and generics. All entities will be declared with the "DONT_TOUCH" attribute. This feature is intended to perform an unconnected synthesis/implementation run of a design without the tool removing the unconnected entity. Note that this feature was developed with Xilinx Vivado toolchain in mind and will likely need modification for other vendor tools.
+Creates an empty top-level entity and an instance of all given files and their signals and generics. All entities will be declared with the "DONT_TOUCH" attribute. This feature is intended to perform an unconnected synthesis/implementation run of a design without the tool removing the unconnected entity. Note that this feature was developed with Xilinx Vivado toolchain in mind and will likely need modification for other vendor tools.
 
 Example: ```hdltoolbox dtt simple_adder.vhd``` 
 ```vhdl
