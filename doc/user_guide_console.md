@@ -2,6 +2,13 @@
 
 This user guide provides some instructions on using the toolbox in console mode. It assumes usage in a typical Linux-based shell environment but can generally be used on any system with Python installed.
 
+## Installation
+
+Clone the repository and navigate to top directory.
+
+Install requirements using
+``pip install -r requirements.txt``
+
 ## How to run
 
 To run the console version simply execute: 
