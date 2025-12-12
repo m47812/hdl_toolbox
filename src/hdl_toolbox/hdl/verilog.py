@@ -64,8 +64,7 @@ class Verilog_Module(HDL_Module):
     @property
     def component_string(self):
         raise AttributeError("Component declarations are not existent in Verilog")
-    def signal_declaration_string(self, en_constants=True, en_signals=True):
-        raise NotImplementedError("Can not be executed in the base class")
+    
     def instance_string(self, instance_name=None):
         if len(self.generics) > 0:
             genrics_str = self._signals_instance_format(self.generics)
