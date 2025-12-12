@@ -67,6 +67,21 @@ def instance(files, output_language):
 
 @main.command()
 @click.argument('files', nargs=-1, type=click.Path())
+@click.option('-o', '--output_language', type=click.Choice(['vhdl', 'vhd', 'verilog', 'v'], case_sensitive=False))
+@click.option('-s', '--signals', is_flag=True, default=False, help="Prints the signals/wires declarations")
+@click.option('-c', '--constants', is_flag=True, default=False, help="Prints the constants/localparam declarations")
+def declarations(files, output_language, signals, constants):
+    """Prints all signal/wire declarations for the provided input entity"""
+    for i, file in enumerate(files):
+        print_title(f"Printing Signal Declarations ({i+1}/{len(files)})")
+        print_filename(file)
+        hdl_module = from_file(file)
+        if output_language is not None:
+            hdl_module = language_convert(hdl_module, output_language)
+        print(hdl_module.signal_declaration_string(en_constants=constants, en_signals=signals))
+
+@main.command()
+@click.argument('files', nargs=-1, type=click.Path())
 def cocotb(files):
     for i, file in enumerate(files):
         print_title(f"Printing CocoTB Interface ({i+1}/{len(files)})")

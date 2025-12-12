@@ -50,7 +50,15 @@ class HDL_Module:
             signal.invert_direction()
 
     def signal_declaration_string(self, en_constants=True, en_signals=True):
-        raise NotImplementedError("Can not be executed in the base class")
+        constants_str, signal_str = "", ""
+        if en_constants and len(self.generics) > 0:
+            for generic in self.generics:
+                constants_str += generic.constant_declaration_string + "\n"
+        if en_signals and len(self.signals) > 0:
+            for signal in self.signals:
+                signal_str += signal.declaration_string + "\n"
+        return constants_str + signal_str
+    
     def instance_string(self, instance_name=None):
         raise NotImplementedError("Can not be executed in the base class")
     def to_verilog(self):

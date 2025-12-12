@@ -224,7 +224,15 @@ class VerilogSignal(Signal):
 
     @property
     def declaration_string(self):
-        return "wire " + self.signal_type.string + self.name
+        return "wire " + self.name + ";"
+    
+    @property
+    def constant_declaration_string(self):
+        default_val = self.default_value
+        if self.default_value is None:
+            default_val = "INSERT_DEFAULT_VALUE_HERE"
+        return "localparam " + self.name + " = " + default_val + ";"
+
     def to_verilog(self):
         return self
     def to_vhdl(self):
