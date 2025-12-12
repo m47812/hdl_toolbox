@@ -44,6 +44,10 @@ class HDL_Module:
         ])
         template = COCOTBInterfaceTemplate(self.entity_name, signal_string, inputs_string)
         return str(template)
+    
+    def invert_direction(self):
+        for signal in self.signals:
+            signal.invert_direction()
 
     def signal_declaration_string(self, en_constants=True, en_signals=True):
         raise NotImplementedError("Can not be executed in the base class")

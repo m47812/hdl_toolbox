@@ -23,6 +23,13 @@ class SignalDirection:
     In = 0
     Out = 1
     InOut = 2
+
+    INVERT = {
+        0 : 1,  #In to Out
+        1 : 0,  #Out to In
+        2 : 2   #Inout to Inout
+    }
+
 class Signal:
     def __init__(self, name, signal_type, direction : SignalDirection = None, default_value = None):
         self.name = name
@@ -30,6 +37,9 @@ class Signal:
         self.direction : SignalDirection = direction
         self.default_value = default_value
         self.connected_signal = None
+
+    def invert_direction(self):
+        self.direction : SignalDirection = SignalDirection.INVERT[self.direction]
 
     @property
     def entity_string(self):

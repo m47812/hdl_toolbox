@@ -25,22 +25,30 @@ def main():
 
 @main.command()
 @click.argument('files', nargs=-1, type=click.Path())
-def component(files):
+@click.option('-i', '--inv', is_flag=True, default=False, help="Prints a dummy component with inverted port directions \n in --> out,\n out --> in,\n inout --> inout")
+def component(files, en_invert):
     for i, file in enumerate(files):
         print_title(f"Printing Component Declarations ({i+1}/{len(files)})")
         print_filename(file)
         hdl_module = from_file(file)
+        if en_invert:
+            hdl_module.invert_direction()
+            hdl_module.entity_name += "_INVERTED"
         hdl_module = language_convert(hdl_module, 'vhdl') #Components are only existent in VHDL
         print(hdl_module.component_string)
 
 @main.command()
 @click.argument('files', nargs=-1, type=click.Path())
 @click.option('-o', '--output_language', type=click.Choice(['vhdl', 'vhd', 'verilog', 'v'], case_sensitive=False))
-def entity(files, output_language):
+@click.option('-i', '--inv', is_flag=True, default=False, help="Prints a dummy entity with inverted port directions \n in --> out,\n out --> in,\n inout --> inout")
+def entity(files, output_language, en_invert):
     for i, file in enumerate(files):
         print_title(f"Printing Entity Declarations ({i+1}/{len(files)})")
         print_filename(file)
         hdl_module = from_file(file)
+        if en_invert:
+            hdl_module.invert_direction()
+            hdl_module.entity_name += "_INVERTED"
         if output_language is not None:
             hdl_module = language_convert(hdl_module, output_language)
         print(hdl_module.entity_string)
